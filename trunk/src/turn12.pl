@@ -2,6 +2,13 @@
 :- use_module(library(clpfd)).
 
 
+
+
+/******************************************************************
+ * Gets and Sets the elements of the list, in pre marked positions,
+ * as the new contact points
+ ******************************************************************/
+ 
 get_elements_pos( _,  _, -1,-1,-1,-1,   A,B,C,D,   A,B,C,D   ):-!.
 get_elements_pos( [X|T],  Pos,  Pos,P2,P3,P4,   _,B,C,D,   E,F,G,H   ) :- !,
 	Pos1 is Pos - 1,
@@ -20,15 +27,11 @@ get_elements_pos( [_|T],  Pos,  P1,P2,P3,P4,   A,B,C,D,   E,F,G,H   ) :- !,
 	get_elements_pos( T,  Pos1,  P1,P2,P3,P4,   A,B,C,D,   E,F,G,H   ).
 
 	
-print_face_cross(FaceN,C1,C2,C3,C4):-
-	write('['),
-	write(FaceN),
-	write('] '),
-	write(C1), write(','),
-	write(C2), write(','),
-	write(C3), write(','),
-	write(C4), nl.
-
+	
+/******************************************************************
+ * Calculates the positions of new contact points based in
+ * input shift.
+ ******************************************************************/
 
 shifted_face( Face, Shift, TotalElements, Distance, C1, C2, C3, C4 ) :- !,
 	S_F1 is ( Shift mod TotalElements ),
@@ -38,6 +41,11 @@ shifted_face( Face, Shift, TotalElements, Distance, C1, C2, C3, C4 ) :- !,
 	TotalElementsIn is TotalElements - 1,
 	get_elements_pos( Face,  TotalElementsIn,   S_F1,S_F2,S_F3,S_F4,  0,0,0,0,  C1,C2,C3,C4 ).
 
+	
+	
+/******************************************************************
+ * Prints rotations
+ ******************************************************************/
 	
 print_rots(R1,R2,R3,R4,R5,R6) :-
 	write('[ Rotations ]'), nl,
@@ -49,6 +57,12 @@ print_rots(R1,R2,R3,R4,R5,R6) :-
 	write('Bottom: '), write( R6 ), nl.
 
 	
+	
+/******************************************************************
+ * Converts a list of numbered characters, defined
+ * with "", to its numeric value
+ ******************************************************************/
+ 
 string_to_list(String,ListOut):-!,
 	string_to_list(String,[],ListOut).
 string_to_list([H|T],ListIn,ListOut):-!,
@@ -56,6 +70,11 @@ string_to_list([H|T],ListIn,ListOut):-!,
 	string_to_list(T,[Val|ListIn],ListOut).
 string_to_list(_,List,List):-!.
 
+
+
+/******************************************************************
+ * Prints a 2D projection of the cube
+ ******************************************************************/
 
 w_top_line:- write(' _________').
 w_top_line_f:- write('_________').
@@ -92,21 +111,29 @@ project_cube(  TT_C1,TT_C2,TT_C3,TT_C4,   BA_C1,BA_C2,BA_C3,BA_C4,   RR_C1,RR_C2
 	w_side_space,                       w_empty_line,                       w_cube_end, nl,
 	w_side_space,                       w_bot_num_line(FF_C3),              w_cube_end, nl.
 
-
 	
 
+/******************************************************************
+ * Processes an input file
+ ******************************************************************/
+ 
 processStreamLine(Stream, ListIn, ListOut) :-
-	at_end_of_stream( Stream ), !,
+	at_end_of_stream(Stream), !,
 	ListOut = ListIn.
 processStreamLine(Stream, ListIn, ListOut) :-
 	at_end_of_line(Stream), !,
 	skip_line(Stream),
 	ListOut = ListIn.
-processStreamLine(Stream, ListIn, ListOut) :- !,
+processStreamLine(Stream, ListIn, ListOut) :-
 	get_code(Stream, Code),
 	Number is Code - 48,
+	Number >= 3,
+	Number =< 9, !,
 	processStreamLine(Stream, [Number|ListIn], ListOut).
-	
+processStreamLine(Stream,_,_):-!,
+	write('Os valores aceites para as faces têm de estar 3 e 9, inclusive.'), nl,
+	close(Stream),
+	abort.
 	
 parse_file(Filename, Top, Bottom, Front, Back, Left, Right) :-
 	open(Filename, read, Stream),
@@ -118,6 +145,12 @@ parse_file(Filename, Top, Bottom, Front, Back, Left, Right) :-
 	processStreamLine(Stream, [], Right),
 	close(Stream).
 	
+	
+
+/******************************************************************
+ * Verifies if all faces's list, have the same length
+ ******************************************************************/
+ 
 verifyLinesLength(Top, Bottom, Front, Back, Left, Right, ToElements):-
 	length(Top,ToElements),
 	length(Bottom,L2),
@@ -130,19 +163,29 @@ verifyLinesLength(Top, Bottom, Front, Back, Left, Right, ToElements):-
 	ToElements = L4,
 	ToElements = L5,
 	ToElements = L6, !.
-	
 verifyLinesLength(_,_,_,_,_,_,_):-!,
 	write('Nem todas as linhas têm o mesmo comprimento. Abortando.'), nl,
 	abort.
+
+
 	
+/******************************************************************
+ * Verifies if the length is a multiple of 4
+ ******************************************************************/
+ 
 verifyLineDistance(Size, Distance):-
 	Size mod 4 =:= 0, !,
 	Distance is floor(Size / 4).
-	
 verifyLineDistance(_, _):-!,
 	write('O comprimento das linhas não é múltiplo de 4. Abortando'), nl,
 	abort.
 
+	
+	
+/******************************************************************
+ * turn12 processing
+ ******************************************************************/
+ 
 turn12:-
 	parse_file('C:/Users/João Henriques/Desktop/Eng. Informática/FEUP/PLOG/turn12/src/cubo.txt',
 						Top, Bottom, Front, Back, Left, Right),
