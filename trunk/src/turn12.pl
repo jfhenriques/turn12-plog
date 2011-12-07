@@ -29,10 +29,15 @@ get_elements_pos( [_|T],  Pos,  P1,P2,P3,P4,   A,B,C,D,   E,F,G,H   ) :- !,
 		
 /*print_time:-
 	datime(T),
-	write(T).*/
+	write(T).
+		nl, print_time, nl,
+	now(EndRun),
+	TotalTime is (EndRun - StartRun),
+	write('Total time is: '),
+	write(TotalTime), nl,*/
 
 print_face_cross(FaceN,C1,C2,C3,C4):-
-	write('Face['),
+	write('['),
 	write(FaceN),
 	write('] '),
 	write(C1), write(','),
@@ -50,15 +55,6 @@ shifted_face( Face, Shift, TotalElements, Distance, C1, C2, C3, C4 ) :- !,
 		get_elements_pos( Face,  TotalElementsIn,   S_F1,S_F2,S_F3,S_F4,  0,0,0,0,  C1,C2,C3,C4 ).
 			
 print_rots(R1,R2,R3,R4,R5,R6) :-
-	/*write('['),
-	write(L),
-	write('] '),
-	write(R1), write(','),
-	write(R2), write(','),
-	write(R3), write(','),
-	write(R4), write(','),
-	write(R5), write(','),
-	write(R6), nl.*/
 	write('R_TT: '), write( R1 ), nl,
 	write('R_BA: '), write( R2 ), nl,
 	write('R_RR: '), write( R3 ), nl,
@@ -86,18 +82,18 @@ turn12:-
 	Distance is 6,
 	
 	Rotations = [ R1, R2, R3, R4, R5, R6 ],
-	domain(Rotations, 1, 24),
+
+	domain(Rotations, 0, 23),
 	
-	/*now(StartRun),
-	print_time, nl,*/
-		
+
 	labeling([], [R1]),
 	shifted_face( Top   , R1, TotElems, Distance, TT_C1, TT_C2, TT_C3, TT_C4 ),
 	labeling([], [R2]),
 	shifted_face( Back  , R2, TotElems, Distance, BA_C1, BA_C2, BA_C3, BA_C4 ),
 	%print_rots(1, R1,R2,0,0,0,0),
-	TT_C1 + BA_C3 #= 12,
 	
+	TT_C1 + BA_C3 #= 12,
+
 	labeling([], [R3]),
 	shifted_face( Right , R3, TotElems, Distance, RR_C1, RR_C2, RR_C3, RR_C4 ),
 	%print_rots(2, R1,R2,R3,0,0,0),
@@ -116,21 +112,15 @@ turn12:-
 	TT_C3 + FF_C1 #= 12,
 	RR_C3 + FF_C2 #= 12,
 	LL_C3 + FF_C4 #= 12,
-	
+
 	labeling([], [R6]),
 	shifted_face( Bottom, R6, TotElems, Distance, BO_C1, BO_C2, BO_C3, BO_C4 ),
 	%print_rots(5, R1,R2,R3,R4,R5,R6),
-	
 	BO_C3 + FF_C3 #= 12,
 	BO_C2 + LL_C4 #= 12,
 	BO_C4 + RR_C2 #= 12,
 	BO_C1 + BA_C1 #= 12,
 	
-	/*nl, print_time, nl,
-	now(EndRun),
-	TotalTime is (EndRun - StartRun),
-	write('Total time is: '),
-	write(TotalTime), nl,*/
 	
 	print_rots( R1,R2,R3,R4,R5,R6 ),
 	
@@ -140,6 +130,7 @@ turn12:-
 	print_face_cross('Left  ', LL_C1, LL_C2, LL_C3, LL_C4 ),
 	print_face_cross('Front ', FF_C1, FF_C2, FF_C3, FF_C4 ),
 	print_face_cross('Bottom', BO_C1, BO_C2, BO_C3, BO_C4 ),
+	
 	nl,
 	write('More possibilities ?'),
 	1 = 2. % falha para ver se existem mais possibilidades
