@@ -92,17 +92,70 @@ project_cube(  TT_C1,TT_C2,TT_C3,TT_C4,   BA_C1,BA_C2,BA_C3,BA_C4,   RR_C1,RR_C2
 	w_side_space,                       w_bot_num_line(FF_C3),              w_cube_end, nl.
 
 
-turn12:-
 	
-	string_to_list( "356735869637537564374649", Top    ),
+
+processStreamLine(Stream, ListIn, ListOut) :-
+	at_end_of_stream( Stream ), !,
+	ListOut = ListIn.
+processStreamLine(Stream, ListIn, ListOut) :-
+	at_end_of_line(Stream), !,
+	skip_line(Stream),
+	ListOut = ListIn.
+processStreamLine(Stream, ListIn, ListOut) :- !,
+	get_code(Stream, Code),
+	Number is Code - 48,
+	processStreamLine(Stream, [Number|ListIn], ListOut).
+	
+	
+parse_file(Filename, Top, Bottom, Front, Back, Left, Right) :-
+	open(Filename, read, Stream),
+	processStreamLine(Stream, [], Top),
+	processStreamLine(Stream, [], Bottom),
+	processStreamLine(Stream, [], Front),
+	processStreamLine(Stream, [], Back),
+	processStreamLine(Stream, [], Left),
+	processStreamLine(Stream, [], Right),
+	close(Stream).
+	
+verifyLinesLength(Top, Bottom, Front, Back, Left, Right, ToElements):-
+	length(Top,ToElements),
+	length(Bottom,L2),
+	length(Front,L3),
+	length(Back,L4),
+	length(Left,L5),
+	length(Right,L6),
+	ToElements = L2,
+	ToElements = L3,
+	ToElements = L4,
+	ToElements = L5,
+	ToElements = L6, !.
+	
+verifyLinesLength(_,_,_,_,_,_,_):-!,
+	write('Nem todas as linhas têm o mesmo comprimento. Abortando.'), nl,
+	abort.
+	
+verifyLineDistance(Size, Distance):-
+	Size mod 4 =:= 0, !,
+	Distance is floor(Size / 4).
+	
+verifyLineDistance(_, _):-!,
+	write('O comprimento das linhas não é múltiplo de 4. Abortando'), nl,
+	abort.
+
+turn12:-
+	parse_file('C:/Users/João Henriques/Desktop/Eng. Informática/FEUP/PLOG/turn12/src/cubo.txt',
+						Top, Bottom, Front, Back, Left, Right),
+						
+	verifyLinesLength(Top, Bottom, Front, Back, Left, Right, TotElems),
+	verifyLineDistance( TotElems, Distance ),	  
+
+	/*string_to_list( "356735869637537564374649", Top    ),
 	string_to_list( "343574954363596738547975", Bottom ),
 	string_to_list( "353748635975458485676439", Front  ),
 	string_to_list( "349576573795398457964379", Back   ),
 	string_to_list( "357863653739359498735895", Left   ),
-	string_to_list( "348765738453874583769785", Right  ),
-	
-	TotElems is 24,
-	Distance is 6,
+	string_to_list( "348765738453874583769785", Right  ),*/
+
 	
 	Rotations = [ R1, R2, R3, R4, R5, R6 ],
 
