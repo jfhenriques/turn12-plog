@@ -139,5 +139,8 @@ turn12:-
 	print_face_cross('Right ', RR_C1, RR_C2, RR_C3, RR_C4 ),
 	print_face_cross('Left  ', LL_C1, LL_C2, LL_C3, LL_C4 ),
 	print_face_cross('Front ', FF_C1, FF_C2, FF_C3, FF_C4 ),
-	print_face_cross('Bottom', BO_C1, BO_C2, BO_C3, BO_C4 ).
+	print_face_cross('Bottom', BO_C1, BO_C2, BO_C3, BO_C4 ),
+	nl,
+	write('More possibilities ?'),
+	1 = 2. % falha para ver se existem mais possibilidades
 	
