@@ -185,10 +185,11 @@ verifyLineDistance(_, _):-!,
 /******************************************************************
  * turn12 processing
  ******************************************************************/
+ turn12p:-
+	turn12('C:/Users/João Henriques/Desktop/Eng. Informática/FEUP/PLOG/turn12/src/cubo.txt').
  
-turn12:-
-	parse_file('C:/Users/João Henriques/Desktop/Eng. Informática/FEUP/PLOG/turn12/src/cubo.txt',
-						Top, Bottom, Front, Back, Left, Right),
+turn12(Filename):-
+	parse_file(Filename, Top, Bottom, Front, Back, Left, Right),
 						
 	verifyLinesLength(Top, Bottom, Front, Back, Left, Right, TotElems),
 	verifyLineDistance( TotElems, Distance ),
