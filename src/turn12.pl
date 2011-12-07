@@ -40,12 +40,13 @@ shifted_face( Face, Shift, TotalElements, Distance, C1, C2, C3, C4 ) :- !,
 
 	
 print_rots(R1,R2,R3,R4,R5,R6) :-
-	write('R_TT: '), write( R1 ), nl,
-	write('R_BA: '), write( R2 ), nl,
-	write('R_RR: '), write( R3 ), nl,
-	write('R_LL: '), write( R4 ), nl,
-	write('R_FF: '), write( R5 ), nl,
-	write('R_BO: '), write( R6 ), nl.
+	write('[ Rotations ]'), nl,
+	write('Top   : '), write( R1 ), nl,
+	write('Back  : '), write( R2 ), nl,
+	write('Right : '), write( R3 ), nl,
+	write('Left  : '), write( R4 ), nl,
+	write('Front : '), write( R5 ), nl,
+	write('Bottom: '), write( R6 ), nl.
 
 	
 string_to_list(String,ListOut):-!,
@@ -147,14 +148,7 @@ turn12:-
 						Top, Bottom, Front, Back, Left, Right),
 						
 	verifyLinesLength(Top, Bottom, Front, Back, Left, Right, TotElems),
-	verifyLineDistance( TotElems, Distance ),	  
-
-	/*string_to_list( "356735869637537564374649", Top    ),
-	string_to_list( "343574954363596738547975", Bottom ),
-	string_to_list( "353748635975458485676439", Front  ),
-	string_to_list( "349576573795398457964379", Back   ),
-	string_to_list( "357863653739359498735895", Left   ),
-	string_to_list( "348765738453874583769785", Right  ),*/
+	verifyLineDistance( TotElems, Distance ),
 
 	
 	Rotations = [ R1, R2, R3, R4, R5, R6 ],
@@ -191,7 +185,7 @@ turn12:-
 	BO_C4 + RR_C2 #= 12,
 	BO_C1 + BA_C1 #= 12,
 	
-	
+	nl,
 	print_rots( R1,R2,R3,R4,R5,R6 ),
 	nl,
 	
