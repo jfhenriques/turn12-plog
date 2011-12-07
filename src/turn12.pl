@@ -36,6 +36,7 @@ get_elements_pos( [_|T],  Pos,  P1,P2,P3,P4,   A,B,C,D,   E,F,G,H   ) :- !,
 	write('Total time is: '),
 	write(TotalTime), nl,*/
 
+
 print_face_cross(FaceN,C1,C2,C3,C4):-
 	write('['),
 	write(FaceN),
@@ -68,6 +69,41 @@ string_to_list([H|T],ListIn,ListOut):-!,
 	Val is H - 48, % o número zero tem o código ascii 48
 	string_to_list(T,[Val|ListIn],ListOut).
 string_to_list(_,List,List):-!.
+
+w_top_line:- write(' _________').
+w_top_line_f:- write('_________').
+w_side_space:- write('          ').
+w_top_bot_num(N):-write('|    '),write(N),write('    ').
+w_bot_num_line(N):- write('|____'),write(N),write('____').
+w_empty_line:- write('|         ').
+w_middle_nums(TREE_L_DESC,N1,N2):- write('|'),write(N1),write('  ') , write(TREE_L_DESC), write('  '),write(N2).
+w_cube_end:-write('|').
+
+project_cube(  TT_C1,TT_C2,TT_C3,TT_C4,   BA_C1,BA_C2,BA_C3,BA_C4,   RR_C1,RR_C2,RR_C3,RR_C4,
+	           LL_C1,LL_C2,LL_C3,LL_C4,   FF_C1,FF_C2,FF_C3,FF_C4,   BO_C1,BO_C2,BO_C3,BO_C4 ) :-
+	
+	% BACK
+	w_side_space, 						w_top_line, 						nl,
+	w_side_space, 						w_top_bot_num(BA_C1), 				w_cube_end, nl,
+	w_side_space, 						w_empty_line,						w_cube_end, nl,
+	w_side_space, 						w_middle_nums('BAC', BA_C4, BA_C2),	w_cube_end, nl,
+	w_side_space, 						w_empty_line,						w_cube_end, nl,
+	w_top_line,   						w_bot_num_line(BA_C3),w_cube_end,	w_top_line_f, 						w_top_line, nl,
+	
+	% LEFT								TOP									RIGHT								BOTTOM
+	w_top_bot_num(LL_C1), 				w_top_bot_num(TT_C1),				w_top_bot_num(RR_C1),				w_top_bot_num(BO_C1),				w_cube_end, nl,
+	w_empty_line, 						w_empty_line, 						w_empty_line,						w_empty_line,						w_cube_end, nl,
+	w_middle_nums('LEF', LL_C4, LL_C2), w_middle_nums('TOP', TT_C4, TT_C2), w_middle_nums('RIG', RR_C4, RR_C2),	w_middle_nums('BOT', BO_C4, BO_C2),	w_cube_end, nl,
+	w_empty_line, 						w_empty_line, 						w_empty_line,						w_empty_line,						w_cube_end, nl,
+	w_bot_num_line(LL_C3),				w_bot_num_line(TT_C3),				w_bot_num_line(RR_C3),				w_bot_num_line(BO_C3),				w_cube_end, nl,
+	
+	% FRONT
+	w_side_space,						w_top_bot_num(FF_C1), 				w_cube_end, nl,
+	w_side_space,						w_empty_line, 						w_cube_end, nl,
+	w_side_space,						w_middle_nums('FRO', FF_C4, FF_C2),	w_cube_end, nl,
+	w_side_space,						w_empty_line,						w_cube_end, nl,
+	w_side_space,						w_bot_num_line(FF_C3),				w_cube_end, nl.
+
 		
 turn12:-
 	
@@ -124,14 +160,19 @@ turn12:-
 	
 	print_rots( R1,R2,R3,R4,R5,R6 ),
 	
-	print_face_cross('Top   ', TT_C1, TT_C2, TT_C3, TT_C4 ),
+	/*print_face_cross('Top   ', TT_C1, TT_C2, TT_C3, TT_C4 ),
 	print_face_cross('Back  ', BA_C1, BA_C2, BA_C3, BA_C4 ),
 	print_face_cross('Right ', RR_C1, RR_C2, RR_C3, RR_C4 ),
 	print_face_cross('Left  ', LL_C1, LL_C2, LL_C3, LL_C4 ),
 	print_face_cross('Front ', FF_C1, FF_C2, FF_C3, FF_C4 ),
-	print_face_cross('Bottom', BO_C1, BO_C2, BO_C3, BO_C4 ),
+	print_face_cross('Bottom', BO_C1, BO_C2, BO_C3, BO_C4 ),*/
 	
 	nl,
+	
+	project_cube( TT_C1,TT_C2,TT_C3,TT_C4,   BA_C1,BA_C2,BA_C3,BA_C4,   RR_C1,RR_C2,RR_C3,RR_C4,
+	              LL_C1,LL_C2,LL_C3,LL_C4,   FF_C1,FF_C2,FF_C3,FF_C4,   BO_C1,BO_C2,BO_C3,BO_C4 ),
+	
+	nl,nl,
 	write('More possibilities ?'),
 	1 = 2. % falha para ver se existem mais possibilidades
 	
