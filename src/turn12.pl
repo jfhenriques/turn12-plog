@@ -112,10 +112,18 @@ project_cube(  TT_C1,TT_C2,TT_C3,TT_C4,   BA_C1,BA_C2,BA_C3,BA_C4,   RR_C1,RR_C2
 
 	
 
+
+
+
 /******************************************************************
  * Processes an input file
  ******************************************************************/
- 
+
+processStreamLine(Stream, ListIn, ListOut) :-
+	peek_code(Stream, Code),
+	Code = -1, !,
+	skip_line(Stream),
+	ListOut = ListIn. 
 processStreamLine(Stream, ListIn, ListOut) :-
 	at_end_of_stream(Stream), !,
 	ListOut = ListIn.
@@ -123,6 +131,7 @@ processStreamLine(Stream, ListIn, ListOut) :-
 	at_end_of_line(Stream), !,
 	skip_line(Stream),
 	ListOut = ListIn.
+
 processStreamLine(Stream, ListIn, ListOut) :-
 	get_code(Stream, Code),
 	write(Code), write(','),
