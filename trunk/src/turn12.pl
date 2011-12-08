@@ -125,6 +125,7 @@ processStreamLine(Stream, ListIn, ListOut) :-
 	ListOut = ListIn.
 processStreamLine(Stream, ListIn, ListOut) :-
 	get_code(Stream, Code),
+	write(Code), write(','),
 	Number is Code - 48,
 	Number >= 3,
 	Number =< 9, !,
@@ -136,12 +137,12 @@ processStreamLine(Stream,_,_):-!,
 	
 parse_file(Filename, Top, Bottom, Front, Back, Left, Right) :-
 	open(Filename, read, Stream),
-	processStreamLine(Stream, [], Top),
-	processStreamLine(Stream, [], Bottom),
-	processStreamLine(Stream, [], Front),
-	processStreamLine(Stream, [], Back),
-	processStreamLine(Stream, [], Left),
-	processStreamLine(Stream, [], Right),
+	processStreamLine(Stream, [], Top), nl,
+	processStreamLine(Stream, [], Bottom),nl,
+	processStreamLine(Stream, [], Front),nl,
+	processStreamLine(Stream, [], Back),nl,
+	processStreamLine(Stream, [], Left),nl,
+	processStreamLine(Stream, [], Right),nl,
 	close(Stream).
 	
 	
