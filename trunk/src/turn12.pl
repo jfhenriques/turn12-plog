@@ -1,7 +1,7 @@
 
 :- use_module(library(clpfd)).
 :- use_module(library(random)).
-
+:- use_module(library(lists)).
 
 
 /******************************************************************
@@ -109,16 +109,17 @@ project_cube(  TT_C1,TT_C2,TT_C3,TT_C4,   BA_C1,BA_C2,BA_C3,BA_C4,   RR_C1,RR_C2
 	w_side_space,                       w_middle_nums('FRO', FF_C4, FF_C2), w_cube_end, nl,
 	w_side_space,                       w_empty_line,                       w_cube_end, nl,
 	w_side_space,                       w_bot_num_line(FF_C3),              w_cube_end, nl.
-
 	
-
-
 
 
 /******************************************************************
  * Processes an input file
  ******************************************************************/
 
+ processStreamLine(Stream, ListIn, ListOut) :-
+	at_end_of_line(Stream), !,
+	skip_line(Stream),
+	ListOut = ListIn.
 processStreamLine(Stream, ListIn, ListOut) :-
 	peek_code(Stream, Code),
 	Code = -1, !,
@@ -128,13 +129,8 @@ processStreamLine(Stream, ListIn, ListOut) :-
 	at_end_of_stream(Stream), !,
 	ListOut = ListIn.
 processStreamLine(Stream, ListIn, ListOut) :-
-	at_end_of_line(Stream), !,
-	skip_line(Stream),
-	ListOut = ListIn.
-
-processStreamLine(Stream, ListIn, ListOut) :-
 	get_code(Stream, Code),
-	write(Code), write(','),
+	%write(Code), write(','),
 	Number is Code - 48,
 	Number >= 3,
 	Number =< 9, !,
@@ -145,13 +141,13 @@ processStreamLine(Stream,_,_):-!,
 	abort.
 	
 parse_file(Filename, Top, Bottom, Front, Back, Left, Right) :-
-	open(Filename, read, Stream),nl,
-	processStreamLine(Stream, [], Top), nl,
-	processStreamLine(Stream, [], Bottom),nl,
-	processStreamLine(Stream, [], Front),nl,
-	processStreamLine(Stream, [], Back),nl,
-	processStreamLine(Stream, [], Left),nl,
-	processStreamLine(Stream, [], Right),nl,
+	open(Filename, read, Stream),
+	processStreamLine(Stream, [], Top),
+	processStreamLine(Stream, [], Bottom),
+	processStreamLine(Stream, [], Front),
+	processStreamLine(Stream, [], Back),
+	processStreamLine(Stream, [], Left),
+	processStreamLine(Stream, [], Right),
 	close(Stream).
 	
 	
@@ -195,18 +191,39 @@ verifyLineDistance(_, _):-!,
  * turn12 processing
  ******************************************************************/
  
- turn12p:-
-	turn12('C:/Users/João Henriques/Desktop/Eng. Informática/FEUP/PLOG/turn12/src/cubo.txt').
+turn12p:-
+	turn12('C:/Users/João Henriques/Desktop/Eng. Informática/FEUP/PLOG/turn12/src/cubo_a.txt').
+ 
  
 turn12(Filename):-
-	parse_file(Filename, Top, Bottom, Front, Back, Left, Right),
-						
+
+	write('Reading cube file...'),nl,
+	parse_file(Filename, Top, Bottom, Front, Back, Left, Right), !,
+	
+	write('Attempting to solve cube...'),nl,
+	turn12( Top,Bottom,Front,Back,Left,Right,    R1, R2, R3, R4, R5, R6,
+			TT_C1,TT_C2,TT_C3,TT_C4,    BA_C1,BA_C2,BA_C3,BA_C4,    RR_C1,RR_C2,RR_C3,RR_C4,
+			LL_C1,LL_C2,LL_C3,LL_C4,    FF_C1,FF_C2,FF_C3,FF_C4,    BO_C1,BO_C2,BO_C3,BO_C4 ),
+
+	nl,	print_rots( R1,R2,R3,R4,R5,R6 ), nl,
+	
+	project_cube( TT_C1,TT_C2,TT_C3,TT_C4,   BA_C1,BA_C2,BA_C3,BA_C4,   RR_C1,RR_C2,RR_C3,RR_C4,
+                  LL_C1,LL_C2,LL_C3,LL_C4,   FF_C1,FF_C2,FF_C3,FF_C4,   BO_C1,BO_C2,BO_C3,BO_C4 ),
+	nl,nl,
+	write('More possibilities ?'),
+	1 = 2. % falha para ver se existem mais possibilidades
+				  
+
+turn12( Top, Bottom, Front, Back, Left, Right,    R1, R2, R3, R4, R5, R6,
+		TT_C1,TT_C2,TT_C3,TT_C4,   BA_C1,BA_C2,BA_C3,BA_C4,   RR_C1,RR_C2,RR_C3,RR_C4,
+		LL_C1,LL_C2,LL_C3,LL_C4,   FF_C1,FF_C2,FF_C3,FF_C4,   BO_C1,BO_C2,BO_C3,BO_C4   ) :-
+	
 	verifyLinesLength(Top, Bottom, Front, Back, Left, Right, TotElems),
 	verifyLineDistance( TotElems, Distance ),
 
 	Rotations = [ R1, R2, R3, R4, R5, R6 ],
 
-	domain(Rotations, 0, 23),
+	domain(Rotations, 1, TotElems),
 
 	labeling([], [R1]),
 	shifted_face( Top   , R1, TotElems, Distance, TT_C1, TT_C2, TT_C3, TT_C4 ),
@@ -214,7 +231,7 @@ turn12(Filename):-
 	shifted_face( Back  , R2, TotElems, Distance, BA_C1, BA_C2, BA_C3, BA_C4 ),
 	
 	TT_C1 + BA_C3 #= 12,
-
+	
 	labeling([], [R3]),
 	shifted_face( Right , R3, TotElems, Distance, RR_C1, RR_C2, RR_C3, RR_C4 ),
 	TT_C2 + RR_C4 #= 12,
@@ -236,20 +253,12 @@ turn12(Filename):-
 	BO_C3 + FF_C3 #= 12,
 	BO_C2 + LL_C4 #= 12,
 	BO_C4 + RR_C2 #= 12,
-	BO_C1 + BA_C1 #= 12,
+	BO_C1 + BA_C1 #= 12.
 	
-	nl,
-	print_rots( R1,R2,R3,R4,R5,R6 ),
-	nl,
-	
-	project_cube( TT_C1,TT_C2,TT_C3,TT_C4,   BA_C1,BA_C2,BA_C3,BA_C4,   RR_C1,RR_C2,RR_C3,RR_C4,
-                  LL_C1,LL_C2,LL_C3,LL_C4,   FF_C1,FF_C2,FF_C3,FF_C4,   BO_C1,BO_C2,BO_C3,BO_C4 ),
-	
-	nl,nl,
-	write('More possibilities ?'),
-	1 = 2. % falha para ver se existem mais possibilidades
+	%write('success'),nl.
 
 
+	
 	
 /******************************************************************
  * Início da geração de problemas
@@ -257,12 +266,108 @@ turn12(Filename):-
  
 random_turn12_n(Number):-
 	random(3, 10, Number).
-
-turn12gen:-
-
-	random_turn12_n( TT_C1 ),
-	random_turn12_n( TT_C3 ),
 	
+
+no_equal_number(N,N, Out) :-!,
+	Out is 3 + ( ( ( N + 1 ) - 3 ) mod 7 ).
+no_equal_number(_,N,N):-!.	
+
+no_equal_pattern( C1,C2,C3,C4, C1,C2,C3,C4, O4 ) :-!,
+	no_equal_number(C4, C4, O4).
+no_equal_pattern( _,_,_,_,  _,_,_,T4,  T4 ).
+
+
+
+fill_cube_face_int(  _,_,_,_,  DistBetweenElems,DistBetweenElems,   A,B,C,D,   FaceOut ) :- !,
+	append([], D, L1),
+	append(L1, C, L2),
+	append(L2, B, L3),
+	append(L3, A, FaceOut).
+	
+fill_cube_face_int( C1,C2,C3,C4,  Pos,DistBetweenElems,   [HA|A],[HB|B],[HC|C],[HD|D],   FaceOut ) :-
+	random_turn12_n( V1_temp ),
+	no_equal_number( HA, V1_temp, V1 ),
+		
+	random_turn12_n( V2_temp ),
+	no_equal_number( HB, V2_temp, V2 ),
+	
+	random_turn12_n( V3_temp ),
+	no_equal_number( HC, V3_temp, V3 ),
+	
+	random_turn12_n( V4_temp ),
+	no_equal_number( HD, V4_temp, V4_tt2 ),
+
+	no_equal_pattern( C1,C2,C3,C4,  V1,V2,V3,V4_tt2, V4 ),
+	
+	NextPos is Pos + 1,
+	fill_cube_face_int(  C1,C2,C3,C4,  NextPos,DistBetweenElems,   [V1|[HA|A]],[V2|[HB|B]],[V3|[HC|C]],[V4|[HD|D]],   FaceOut ).
+	
+	
+fill_cube_face( C1,C2,C3,C4,  DistBetweenElems,  FaceOut ) :-
+	fill_cube_face_int( C1,C2,C3,C4,  1,   DistBetweenElems,   [C1],[C2],[C3],[C4],   FaceOut ).	
+
+	
+
+
+write_cube_line([], _):-!.
+write_cube_line([H|T], Stream) :-
+	Char is H + 48,
+	put_code(Stream, Char), !,
+	write_cube_line(T, Stream).
+write_cube_line(_, Stream) :- !,
+	write('Error writing in file. Aborting.'), nl,
+	close(Stream),
+	abort.
+	
+write_cube_file(Filename, Top, Bottom, Front, Back, Left, Right) :-
+	open(Filename, write, Stream), !,
+	reverse(Top   ,Top_r   ),
+	reverse(Bottom,Bottom_r),
+	reverse(Front ,Front_r ),
+	reverse(Back  ,Back_r  ),
+	reverse(Left  ,Left_r  ),
+	reverse(Right ,Right_r ),
+	write_cube_line(Top_r   , Stream), nl(Stream),
+	write_cube_line(Bottom_r, Stream), nl(Stream),
+	write_cube_line(Front_r , Stream), nl(Stream),
+	write_cube_line(Back_r  , Stream), nl(Stream),
+	write_cube_line(Left_r  , Stream), nl(Stream),
+	write_cube_line(Right_r , Stream),
+	close(Stream).
+	
+turn12_unique_gen( Top, Bottom, Front, Back, Left, Right ) :- !,
+	turn12( Top, Bottom, Front, Back, Left, Right,    R1, R2, R3, R4, R5, R6,
+			_,_,_,_,  _,_,_,_,  _,_,_,_,  _,_,_,_,  _,_,_,_,  _,_,_,_  ),
+		!,	
+		%print_rots(R1,R2,R3,R4,R5,R6),
+		length( Top, TotalElem ),	
+		R1 = TotalElem,
+		R2 = TotalElem,
+		R3 = TotalElem,
+		R4 = TotalElem,
+		R5 = TotalElem,
+		R6 = TotalElem.
+		
+
+turn12genp(Dist):-
+	turn12gen( 'C:/Users/João Henriques/Desktop/Eng. Informática/FEUP/PLOG/turn12/src/cubo_a.txt', Dist ).
+	
+turn12genp:-
+	turn12gen( 'C:/Users/João Henriques/Desktop/Eng. Informática/FEUP/PLOG/turn12/src/cubo_a.txt', 15 ).
+
+
+turn12gen(Filename, Distance):-
+	Distance > 0,
+	
+	repeat,
+	write('Making attempt...'), nl,
+	
+	random_turn12_n( TT_C1 ),
+	random_turn12_n( TT_C2 ),
+
+	random_turn12_n( BO_C1 ),
+	random_turn12_n( BO_C3 ),
+
 	random_turn12_n( BA_C2 ),
 	random_turn12_n( BA_C4 ),
 	
@@ -274,15 +379,19 @@ turn12gen:-
 	
 	random_turn12_n( RR_C2 ),
 	random_turn12_n( RR_C4 ),
-	
-	random_turn12_n( BO_C1 ),
-	random_turn12_n( BO_C3 ),
 
-	
-	ContactPoints = [  TT_C2,TT_C4,   BA_C1,BA_C3,   RR_C1,RR_C3,
-                       BO_C2,BO_C4,   LL_C1,LL_C3,   FF_C1,FF_C3  ],
-					   
+	ContactPoints = [  TT_C2,TT_C4,    FF_C1,FF_C3,    LL_C2,LL_C4,
+                       BO_C2,BO_C4,    BA_C1,BA_C3,    RR_C2,RR_C4   ],
+
 	domain(ContactPoints, 3, 9),
+	
+	TT_C2 #\= TT_C4,
+	BO_C2 #\= BO_C4,
+	
+	FF_C1 #\= FF_C3, 
+	BA_C1 #\= BA_C3,
+	RR_C1 #\= RR_C3,
+	LL_C1 #\= LL_C3,
 
 	TT_C1 + BA_C3 #= 12,
 		
@@ -303,6 +412,32 @@ turn12gen:-
 	
 	labeling([], ContactPoints),
 	
-	project_cube( TT_C1,TT_C2,TT_C3,TT_C4,   BA_C1,BA_C2,BA_C3,BA_C4,   RR_C1,RR_C2,RR_C3,RR_C4,
-                  LL_C1,LL_C2,LL_C3,LL_C4,   FF_C1,FF_C2,FF_C3,FF_C4,   BO_C1,BO_C2,BO_C3,BO_C4 ).
+	repeat,
 	
+	write('Attempting to generate a unique solution cube...'), nl,
+	fill_cube_face( TT_C1,TT_C2,TT_C3,TT_C4, Distance, Top    ),
+	fill_cube_face( BA_C1,BA_C2,BA_C3,BA_C4, Distance, Back   ),
+	fill_cube_face( RR_C1,RR_C2,RR_C3,RR_C4, Distance, Right  ),
+	fill_cube_face( LL_C1,LL_C2,LL_C3,LL_C4, Distance, Left   ),
+	fill_cube_face( FF_C1,FF_C2,FF_C3,FF_C4, Distance, Front  ),
+	fill_cube_face( BO_C1,BO_C2,BO_C3,BO_C4, Distance, Bottom ),
+			   
+	write(Top),nl,
+	write(Bottom),nl,
+	write(Front),nl,
+	write(Back),nl,
+	write(Left),nl,
+	write(Right),nl,
+	
+	turn12_unique_gen( Top, Bottom, Front, Back, Left, Right ),
+
+	write('Cube has a unique solution.'),nl,
+	
+	project_cube( TT_C1,TT_C2,TT_C3,TT_C4,   BA_C1,BA_C2,BA_C3,BA_C4,   RR_C1,RR_C2,RR_C3,RR_C4,
+                  LL_C1,LL_C2,LL_C3,LL_C4,   FF_C1,FF_C2,FF_C3,FF_C4,   BO_C1,BO_C2,BO_C3,BO_C4 ),
+
+	write('Writing cube to file.'),nl,
+	write_cube_file(Filename, Top, Bottom, Front, Back, Left, Right ).
+	
+turn12gen(_,_):-
+	write('Distância entre elementos tem de ser maior ou igual a 1. Abortando.').
