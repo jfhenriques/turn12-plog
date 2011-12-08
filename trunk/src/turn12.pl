@@ -1,6 +1,6 @@
 
 :- use_module(library(clpfd)).
-
+:- use_module(library(random)).
 
 
 
@@ -85,11 +85,10 @@ w_empty_line:- write('|         ').
 w_middle_nums(TREE_L_DESC,N1,N2):- write('|'),write(N1),write('  ') , write(TREE_L_DESC), write('  '),write(N2).
 w_cube_end:-write('|').
 
-
 project_cube(  TT_C1,TT_C2,TT_C3,TT_C4,   BA_C1,BA_C2,BA_C3,BA_C4,   RR_C1,RR_C2,RR_C3,RR_C4,
                LL_C1,LL_C2,LL_C3,LL_C4,   FF_C1,FF_C2,FF_C3,FF_C4,   BO_C1,BO_C2,BO_C3,BO_C4 ) :-
 	
-	% BACK
+	%                                   BACK
 	w_side_space,                       w_top_line,                         nl,
 	w_side_space,                       w_top_bot_num(BA_C1),               w_cube_end, nl,
 	w_side_space,                       w_empty_line,                       w_cube_end, nl,
@@ -104,7 +103,7 @@ project_cube(  TT_C1,TT_C2,TT_C3,TT_C4,   BA_C1,BA_C2,BA_C3,BA_C4,   RR_C1,RR_C2
 	w_empty_line,                       w_empty_line,                       w_empty_line,                       w_empty_line,                       w_cube_end, nl,
 	w_bot_num_line(LL_C3),              w_bot_num_line(TT_C3),              w_bot_num_line(RR_C3),              w_bot_num_line(BO_C3),              w_cube_end, nl,
 	
-	% FRONT
+	%                                   FRONT
 	w_side_space,                       w_top_bot_num(FF_C1),               w_cube_end, nl,
 	w_side_space,                       w_empty_line,                       w_cube_end, nl,
 	w_side_space,                       w_middle_nums('FRO', FF_C4, FF_C2), w_cube_end, nl,
@@ -185,6 +184,7 @@ verifyLineDistance(_, _):-!,
 /******************************************************************
  * turn12 processing
  ******************************************************************/
+ 
  turn12p:-
 	turn12('C:/Users/João Henriques/Desktop/Eng. Informática/FEUP/PLOG/turn12/src/cubo.txt').
  
@@ -238,3 +238,61 @@ turn12(Filename):-
 	nl,nl,
 	write('More possibilities ?'),
 	1 = 2. % falha para ver se existem mais possibilidades
+
+
+	
+/******************************************************************
+ * Início da geração de problemas
+ ******************************************************************/
+ 
+random_turn12_n(Number):-
+	random(3, 10, Number).
+
+turn12gen:-
+
+	random_turn12_n( TT_C1 ),
+	random_turn12_n( TT_C3 ),
+	
+	random_turn12_n( BA_C2 ),
+	random_turn12_n( BA_C4 ),
+	
+	random_turn12_n( FF_C2 ),
+	random_turn12_n( FF_C4 ),
+	
+	random_turn12_n( LL_C2 ),
+	random_turn12_n( LL_C4 ),
+	
+	random_turn12_n( RR_C2 ),
+	random_turn12_n( RR_C4 ),
+	
+	random_turn12_n( BO_C1 ),
+	random_turn12_n( BO_C3 ),
+
+	
+	ContactPoints = [  TT_C2,TT_C4,   BA_C1,BA_C3,   RR_C1,RR_C3,
+                       BO_C2,BO_C4,   LL_C1,LL_C3,   FF_C1,FF_C3  ],
+					   
+	domain(ContactPoints, 3, 9),
+
+	TT_C1 + BA_C3 #= 12,
+		
+	TT_C2 + RR_C4 #= 12,
+	RR_C1 + BA_C2 #= 12,
+	
+	TT_C4 + LL_C2 #= 12,
+	LL_C1 + BA_C4 #= 12,
+
+	TT_C3 + FF_C1 #= 12,
+	RR_C3 + FF_C2 #= 12,
+	LL_C3 + FF_C4 #= 12,
+
+	BO_C3 + FF_C3 #= 12,
+	BO_C2 + LL_C4 #= 12,
+	BO_C4 + RR_C2 #= 12,
+	BO_C1 + BA_C1 #= 12,
+	
+	labeling([], ContactPoints),
+	
+	project_cube( TT_C1,TT_C2,TT_C3,TT_C4,   BA_C1,BA_C2,BA_C3,BA_C4,   RR_C1,RR_C2,RR_C3,RR_C4,
+                  LL_C1,LL_C2,LL_C3,LL_C4,   FF_C1,FF_C2,FF_C3,FF_C4,   BO_C1,BO_C2,BO_C3,BO_C4 ).
+	
