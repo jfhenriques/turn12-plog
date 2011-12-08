@@ -194,7 +194,6 @@ verifyLineDistance(_, _):-!,
 turn12p:-
 	turn12('C:/Users/João Henriques/Desktop/Eng. Informática/FEUP/PLOG/turn12/src/cubo_a.txt').
  
- 
 turn12(Filename):-
 
 	write('Reading cube file...'),nl,
@@ -212,7 +211,6 @@ turn12(Filename):-
 	nl,nl,
 	write('More possibilities ?'),
 	1 = 2. % falha para ver se existem mais possibilidades
-				  
 
 turn12( Top, Bottom, Front, Back, Left, Right,    R1, R2, R3, R4, R5, R6,
 		TT_C1,TT_C2,TT_C3,TT_C4,   BA_C1,BA_C2,BA_C3,BA_C4,   RR_C1,RR_C2,RR_C3,RR_C4,
@@ -255,19 +253,20 @@ turn12( Top, Bottom, Front, Back, Left, Right,    R1, R2, R3, R4, R5, R6,
 	BO_C4 + RR_C2 #= 12,
 	BO_C1 + BA_C1 #= 12.
 	
-	%write('success'),nl.
-
 
 	
 	
 /******************************************************************
+ ******************************************************************
  * Início da geração de problemas
+ ******************************************************************
  ******************************************************************/
  
 random_turn12_n(Number):-
 	random(3, 10, Number).
 	
-
+	
+	
 no_equal_number(N,N, Out) :-!,
 	Out is 3 + ( ( ( N + 1 ) - 3 ) mod 7 ).
 no_equal_number(_,N,N):-!.	
@@ -306,8 +305,6 @@ fill_cube_face_int( C1,C2,C3,C4,  Pos,DistBetweenElems,   [HA|A],[HB|B],[HC|C],[
 fill_cube_face( C1,C2,C3,C4,  DistBetweenElems,  FaceOut ) :-
 	fill_cube_face_int( C1,C2,C3,C4,  1,   DistBetweenElems,   [C1],[C2],[C3],[C4],   FaceOut ).	
 
-	
-
 
 write_cube_line([], _):-!.
 write_cube_line([H|T], Stream) :-
@@ -318,6 +315,8 @@ write_cube_line(_, Stream) :- !,
 	write('Error writing in file. Aborting.'), nl,
 	close(Stream),
 	abort.
+	
+	
 	
 write_cube_file(Filename, Top, Bottom, Front, Back, Left, Right) :-
 	open(Filename, write, Stream), !,
@@ -335,6 +334,8 @@ write_cube_file(Filename, Top, Bottom, Front, Back, Left, Right) :-
 	write_cube_line(Right_r , Stream),
 	close(Stream).
 	
+	
+	
 turn12_unique_gen( Top, Bottom, Front, Back, Left, Right ) :- !,
 	turn12( Top, Bottom, Front, Back, Left, Right,    R1, R2, R3, R4, R5, R6,
 			_,_,_,_,  _,_,_,_,  _,_,_,_,  _,_,_,_,  _,_,_,_,  _,_,_,_  ),
@@ -348,13 +349,30 @@ turn12_unique_gen( Top, Bottom, Front, Back, Left, Right ) :- !,
 		R5 = TotalElem,
 		R6 = TotalElem.
 		
+		
+shuffle_cube_face( Face, ShufflePos, FaceOut ) :-
+	shuffle_cube_face( Face, 0, ShufflePos, [], FaceOut ).
+shuffle_cube_face( [H|T], Pos, ShufflePos, ListIn, FaceOut ) :-
+	Pos < ShufflePos,
+	append( ListIn, [H], NewList ),
+	NewPos is Pos + 1,
+	shuffle_cube_face( T, NewPos, ShufflePos, NewList, FaceOut ).
+shuffle_cube_face( Tail, _, _, ListIn, FaceOut ) :-
+	append( Tail, ListIn, FaceOut ).
+	
 
+	
+randomly_suffle_face( Face, FaceSize, FaceOut ) :-
+	random(0, FaceSize, Rotation),
+	shuffle_cube_face( Face, Rotation, FaceOut ).
+	
+
+	
 turn12genp(Dist):-
 	turn12gen( 'C:/Users/João Henriques/Desktop/Eng. Informática/FEUP/PLOG/turn12/src/cubo_a.txt', Dist ).
-	
+
 turn12genp:-
 	turn12gen( 'C:/Users/João Henriques/Desktop/Eng. Informática/FEUP/PLOG/turn12/src/cubo_a.txt', 15 ).
-
 
 turn12gen(Filename, Distance):-
 	Distance > 0,
@@ -429,15 +447,24 @@ turn12gen(Filename, Distance):-
 	write(Left),nl,
 	write(Right),nl,
 	
-	turn12_unique_gen( Top, Bottom, Front, Back, Left, Right ),
+	turn12_unique_gen( Top, Bottom, Front, Back, Left, Right ), !,
 
 	write('Cube has a unique solution.'),nl,
 	
+	FaceSize is Distance * 4,
+	
+	randomly_suffle_face( Top   , FaceSize, ShuffTop    ),
+	randomly_suffle_face( Back  , FaceSize, ShuffBack   ),
+	randomly_suffle_face( Right , FaceSize, ShuffRight  ),
+	randomly_suffle_face( Left  , FaceSize, ShuffLeft   ),
+	randomly_suffle_face( Front , FaceSize, ShuffFront  ),
+	randomly_suffle_face( Bottom, FaceSize, ShuffBottom ),
+	
 	project_cube( TT_C1,TT_C2,TT_C3,TT_C4,   BA_C1,BA_C2,BA_C3,BA_C4,   RR_C1,RR_C2,RR_C3,RR_C4,
                   LL_C1,LL_C2,LL_C3,LL_C4,   FF_C1,FF_C2,FF_C3,FF_C4,   BO_C1,BO_C2,BO_C3,BO_C4 ),
-
+				  
 	write('Writing cube to file.'),nl,
-	write_cube_file(Filename, Top, Bottom, Front, Back, Left, Right ).
-	
+	write_cube_file(Filename, ShuffTop, ShuffBottom, ShuffFront, ShuffBack, ShuffLeft, ShuffRight ).
+
 turn12gen(_,_):-
 	write('Distância entre elementos tem de ser maior ou igual a 1. Abortando.').
