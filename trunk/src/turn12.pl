@@ -152,12 +152,12 @@ parse_file(Filename, Top, Bottom, Front, Back, Left, Right) :-
  ******************************************************************/
  
 verifyLinesLength(Top, Bottom, Front, Back, Left, Right, ToElements):-
-	length(Top,ToElements),
-	length(Bottom,L2),
-	length(Front,L3),
-	length(Back,L4),
-	length(Left,L5),
-	length(Right,L6),
+	length(Top   , ToElements),
+	length(Bottom, L2),
+	length(Front , L3),
+	length(Back  , L4),
+	length(Left  , L5),
+	length(Right , L6),
 	ToElements = L2,
 	ToElements = L3,
 	ToElements = L4,
@@ -194,7 +194,6 @@ turn12(Filename):-
 	verifyLinesLength(Top, Bottom, Front, Back, Left, Right, TotElems),
 	verifyLineDistance( TotElems, Distance ),
 
-	
 	Rotations = [ R1, R2, R3, R4, R5, R6 ],
 
 	domain(Rotations, 0, 23),
