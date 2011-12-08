@@ -136,7 +136,7 @@ processStreamLine(Stream,_,_):-!,
 	abort.
 	
 parse_file(Filename, Top, Bottom, Front, Back, Left, Right) :-
-	open(Filename, read, Stream),
+	open(Filename, read, Stream),nl,
 	processStreamLine(Stream, [], Top), nl,
 	processStreamLine(Stream, [], Bottom),nl,
 	processStreamLine(Stream, [], Front),nl,
