@@ -403,13 +403,16 @@ turn12gen(Filename, Distance):-
 
 	domain(ContactPoints, 3, 9),
 	
-	TT_C2 #\= TT_C4,
-	BO_C2 #\= BO_C4,
+	% têm de ser diferentes, se não, ao girar a face 180º,
+	% e se os cantos opostos forem os mesmos, originaria uma nova solução
+	% se os quatro forem iguais, originariam 4 novas soluções.
+	TT_C1 #\= TT_C3   #\/   TT_C2 #\= TT_C4,
+	BO_C1 #\= BO_C3   #\/   BO_C2 #\= BO_C4,
 	
-	FF_C1 #\= FF_C3, 
-	BA_C1 #\= BA_C3,
-	RR_C1 #\= RR_C3,
-	LL_C1 #\= LL_C3,
+	FF_C1 #\= FF_C3   #\/   FF_C2 #\= FF_C4,
+	BA_C1 #\= BA_C3   #\/   BA_C2 #\= BA_C4,
+	RR_C1 #\= RR_C3   #\/   RR_C2 #\= RR_C4,
+	LL_C1 #\= LL_C3   #\/   LL_C2 #\= LL_C4,
 
 	TT_C1 + BA_C3 #= 12,
 		
@@ -432,7 +435,7 @@ turn12gen(Filename, Distance):-
 	
 	repeat,
 	
-	write('Attempting to generate a unique solution cube...'), nl,
+	write('Attempting to generate a cube with a unique solution...'), nl,
 	fill_cube_face( TT_C1,TT_C2,TT_C3,TT_C4, Distance, Top    ),
 	fill_cube_face( BA_C1,BA_C2,BA_C3,BA_C4, Distance, Back   ),
 	fill_cube_face( RR_C1,RR_C2,RR_C3,RR_C4, Distance, Right  ),
