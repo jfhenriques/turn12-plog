@@ -147,7 +147,7 @@ parse_file(Filename, Top, Bottom, Front, Back, Left, Right) :-
 	
 	
 /******************************************************************
- * Verifies if all faces's list, have the same length
+ * Verifies if all list faces, have the same length
  ******************************************************************/
  
 verifyLinesLength(Top, Bottom, Front, Back, Left, Right, ToElements):-
