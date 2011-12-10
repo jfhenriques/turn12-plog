@@ -239,9 +239,13 @@ turn12( Top, Bottom, Front, Back, Left, Right,    R1, R2, R3, R4, R5, R6,
 	BO_C1 + BA_C1 #= 12,
 	
 	
-	labeling([], [R1]),
+	% os labelings foram separados de forma a evitar que o predicado shifted_face
+	% seja corrido sem ser necessário. Desta forma sempre que um shifted_face falha,
+	% volta ao labeling anterior, e gera a rotação da face, só voltando aos labelings
+	% anteriores assim que o mesmo esgota todas as possibilidades do domínio.
+	
+	labeling([], [R1,R2]),
 	shifted_face( Top   , R1, TotElems, Distance, TT_C1, TT_C2, TT_C3, TT_C4 ),
-	labeling([], [R2]),
 	shifted_face( Back  , R2, TotElems, Distance, BA_C1, BA_C2, BA_C3, BA_C4 ),
 	
 
@@ -461,7 +465,7 @@ turn12gen(Filename, Distance):-
 	Distance > 0,
 	
 	repeat,
-	write('Making attempt...'), nl,
+	write('Making an attempt to find if current generated random numbers can make a solution...'), nl,
 	
 	random_turn12_n( TT_C1 ),
 	random_turn12_n( TT_C2 ),
