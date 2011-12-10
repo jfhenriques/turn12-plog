@@ -271,6 +271,8 @@ no_equal_number(N,N, Out) :-!,
 	Out is 3 + ( ( ( N + 1 ) - 3 ) mod 7 ).
 no_equal_number(_,N,N):-!.	
 
+
+
 no_equal_pattern( C1,C2,C3,C4, C1,C2,C3,C4, O4 ) :-!,
 	no_equal_number(C4, C4, O4).
 no_equal_pattern( _,_,_,_,  _,_,_,T4,  T4 ).
@@ -302,9 +304,11 @@ fill_cube_face_int( C1,C2,C3,C4,  Pos,DistBetweenElems,   [HA|A],[HB|B],[HC|C],[
 	fill_cube_face_int(  C1,C2,C3,C4,  NextPos,DistBetweenElems,   [V1|[HA|A]],[V2|[HB|B]],[V3|[HC|C]],[V4|[HD|D]],   FaceOut ).
 	
 	
+	
 fill_cube_face( C1,C2,C3,C4,  DistBetweenElems,  FaceOut ) :-
 	fill_cube_face_int( C1,C2,C3,C4,  1,   DistBetweenElems,   [C1],[C2],[C3],[C4],   FaceOut ).	
 
+	
 
 write_cube_line([], _):-!.
 write_cube_line([H|T], Stream) :-
@@ -350,6 +354,7 @@ turn12_unique_gen( Top, Bottom, Front, Back, Left, Right ) :- !,
 		R6 = TotalElem.
 		
 		
+		
 shuffle_cube_face( Face, ShufflePos, FaceOut ) :-
 	shuffle_cube_face( Face, 0, ShufflePos, [], FaceOut ).
 shuffle_cube_face( [H|T], Pos, ShufflePos, ListIn, FaceOut ) :-
@@ -366,7 +371,34 @@ randomly_suffle_face( Face, FaceSize, FaceOut ) :-
 	random(0, FaceSize, Rotation),
 	shuffle_cube_face( Face, Rotation, FaceOut ).
 	
-
+	
+	
+sum_face([], Sum, Sum).
+sum_face([H|T], SumIn, SumOut) :-
+	NewSum is SumIn + H,
+	sum_face(T, NewSum, SumOut).
+	
+print_face_stats(F,Sum,FSize):-
+	Div is Sum / FSize,
+	write('    '), write(F), write(' sum is: '), write( Sum ), write(' ('), write(Div), write(')'), nl.
+	
+print_cube_stats( Top, Bottom, Front, Back, Left, Right, FaceSize ) :-
+	sum_face(Top, 0, SumTop),
+	sum_face(Back, 0, SumBack),
+	sum_face(Right, 0, SumRight),
+	sum_face(Left, 0, SumLeft),
+	sum_face(Front, 0, SumFront),
+	sum_face(Bottom, 0, SumBottom),
+	print_face_stats('Top', SumTop, FaceSize),
+	print_face_stats('Back', SumBack, FaceSize),
+	print_face_stats('Right', SumRight, FaceSize),
+	print_face_stats('Left', SumLeft, FaceSize),
+	print_face_stats('Front', SumFront, FaceSize),
+	print_face_stats('Bottom', SumBottom, FaceSize),
+	TotalSum is SumTop + SumBack + SumRight + SumLeft + SumFront + SumBottom,
+	print_face_stats('Total', TotalSum, FaceSize).
+	
+	
 	
 turn12genp(Dist):-
 	turn12gen( 'C:/Users/João Henriques/Desktop/Eng. Informática/FEUP/PLOG/turn12/src/cubo_a.txt', Dist ).
@@ -442,6 +474,11 @@ turn12gen(Filename, Distance):-
 	fill_cube_face( LL_C1,LL_C2,LL_C3,LL_C4, Distance, Left   ),
 	fill_cube_face( FF_C1,FF_C2,FF_C3,FF_C4, Distance, Front  ),
 	fill_cube_face( BO_C1,BO_C2,BO_C3,BO_C4, Distance, Bottom ),
+	
+	FaceSize is Distance * 4,
+	
+	print_cube_stats( Top, Bottom, Front, Back, Left, Right, FaceSize ),
+
 			   
 	write(Top),nl,
 	write(Bottom),nl,
@@ -454,7 +491,7 @@ turn12gen(Filename, Distance):-
 
 	write('Cube has a unique solution.'),nl,
 	
-	FaceSize is Distance * 4,
+
 	
 	randomly_suffle_face( Top   , FaceSize, ShuffTop    ),
 	randomly_suffle_face( Back  , FaceSize, ShuffBack   ),
