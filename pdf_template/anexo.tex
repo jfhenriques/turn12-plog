@@ -52,6 +52,7 @@ escapeinside={\$}{)}         % if you want to add a comment within your code
 \lstset{ caption={Código ProLog: turn12.pl}}
 \begin{lstlisting}
 
+
 :- use_module(library(clpfd)).
 :- use_module(library(random)).
 :- use_module(library(lists)).
@@ -99,7 +100,6 @@ shifted_face( Face, Shift, TotalElements, Distance, C1, C2, C3, C4 ) :- !,
  **********************************************************/
 	
 print_rots(R1,R2,R3,R4,R5,R6) :-
-
 	write('[ Rotations ]'), nl,
 	write('Top   : '), write( R1 ), nl,
 	write('Bottom: '), write( R2 ), nl,
@@ -632,4 +632,5 @@ turn12gen(Filename, Distance):-
 
 turn12gen(_,_):-
 	write('Distance between elements must be grater than 0. Aborting.').
+
 \end{lstlisting}

@@ -4,10 +4,10 @@
 :- use_module(library(lists)).
 
 
-/******************************************************************
- * Gets and Sets the elements of the list, in pre marked positions,
- * as the new contact points
- ******************************************************************/
+/**********************************************************
+ * Gets and Sets the elements of the list, in pre marked
+ * positions, as the new contact points
+ **********************************************************/
  
 get_elements_pos( _,  _, -1,-1,-1,-1,   A,B,C,D,   A,B,C,D   ):-!.
 get_elements_pos( [X|T],  Pos,  Pos,P2,P3,P4,   _,B,C,D,   E,F,G,H   ) :- !,
@@ -27,10 +27,10 @@ get_elements_pos( [_|T],  Pos,  P1,P2,P3,P4,   A,B,C,D,   E,F,G,H   ) :- !,
 	get_elements_pos( T,  Pos1,  P1,P2,P3,P4,   A,B,C,D,   E,F,G,H   ).
 
 	
-/******************************************************************
+/**********************************************************
  * Calculates the positions of new contact points based in
  * input shift.
- ******************************************************************/
+ **********************************************************/
 
 shifted_face( Face, Shift, TotalElements, Distance, C1, C2, C3, C4 ) :- !,
 	S_F1 is ( Shift mod TotalElements ),
@@ -41,12 +41,11 @@ shifted_face( Face, Shift, TotalElements, Distance, C1, C2, C3, C4 ) :- !,
 	get_elements_pos( Face,  TotalElementsIn,   S_F1,S_F2,S_F3,S_F4,  0,0,0,0,  C1,C2,C3,C4 ).
 
 	
-/******************************************************************
+/**********************************************************
  * Prints rotations
- ******************************************************************/
+ **********************************************************/
 	
 print_rots(R1,R2,R3,R4,R5,R6) :-
-
 	write('[ Rotations ]'), nl,
 	write('Top   : '), write( R1 ), nl,
 	write('Bottom: '), write( R2 ), nl,
@@ -56,10 +55,10 @@ print_rots(R1,R2,R3,R4,R5,R6) :-
 	write('Right : '), write( R6 ), nl.
 
 	
-/******************************************************************
+/**********************************************************
  * Converts a list of numbered characters, defined
  * with "", to its numeric value
- ******************************************************************/
+ **********************************************************/
  
 string_to_list(String,ListOut):-!,
 	string_to_list(String,[],ListOut).
@@ -69,9 +68,9 @@ string_to_list([H|T],ListIn,ListOut):-!,
 string_to_list(_,List,List):-!.
 
 
-/******************************************************************
+/**********************************************************
  * Prints a 2D projection of the cube
- ******************************************************************/
+ **********************************************************/
 
 w_top_line:- write(' _________').
 w_top_line_f:- write('_________').
@@ -108,9 +107,9 @@ project_cube(  TT_C1,TT_C2,TT_C3,TT_C4,   BA_C1,BA_C2,BA_C3,BA_C4,   RR_C1,RR_C2
 	w_side_space,                       w_bot_num_line(FF_C3),              w_cube_end, nl.
 	
 
-/******************************************************************
+/**********************************************************
  * Processes an input file
- ******************************************************************/
+ **********************************************************/
 
  processStreamLine(Stream, ListIn, ListOut) :-
 	at_end_of_line(Stream), !,
@@ -147,9 +146,9 @@ parse_file(Filename, Top, Bottom, Front, Back, Left, Right) :-
 	close(Stream).
 	
 	
-/******************************************************************
+/**********************************************************
  * Verifies if all list faces, have the same length
- ******************************************************************/
+ **********************************************************/
  
 verifyLinesLength(Top, Bottom, Front, Back, Left, Right, ToElements):-
 	length(Top   , ToElements),
@@ -168,9 +167,9 @@ verifyLinesLength(_,_,_,_,_,_,_):-!,
 	abort.
 
 	
-/******************************************************************
+/**********************************************************
  * Verifies if the length is a multiple of 4
- ******************************************************************/
+ **********************************************************/
  
 verifyLineDistance(Size, Distance):-
 	Size mod 4 =:= 0, !,
@@ -180,9 +179,9 @@ verifyLineDistance(_, _):-!,
 	abort.
 
 	
-/******************************************************************
+/**********************************************************
  * turn12 processing
- ******************************************************************/
+ **********************************************************/
  
 turn12p:-
 	turn12('C:/Users/João Henriques/Desktop/Eng. Informática/FEUP/PLOG/turn12/src/cubo_a.txt').
@@ -286,50 +285,48 @@ turn12( Top, Bottom, Front, Back, Left, Right,    R1, R2, R3, R4, R5, R6,
 	shifted_face( Bottom, R2, TotElems, Distance, BO_C1, BO_C2, BO_C3, BO_C4 ).
 
 	
-
 	
-	
-	
-/******************************************************************
- ******************************************************************
+/**********************************************************
+ **********************************************************
  * Generating problems
- ******************************************************************
- ******************************************************************/
+ **********************************************************
+ **********************************************************/
  
  
  %
-/******************************************************************
+/**********************************************************
  * Generate random number in the domain of the problem
  * [3, 10-1]
- ******************************************************************/
+ **********************************************************/
  
 random_turn12_n(Number):-
 	random(3, 10, Number).
 	
 	
-/******************************************************************
+/**********************************************************
  * Guarantees there is no adjecent repeated
  * numbers in each face
- ******************************************************************/
+ **********************************************************/
  
 no_equal_number(N,N, Out) :-!,
 	Out is 3 + ( ( ( N + 1 ) - 3 ) mod 7 ).
 no_equal_number(_,N,N):-!.	
 
 
-/******************************************************************
- * Guarantees there is not another not another pattern equal to
- * the original
- ******************************************************************/
+/**********************************************************
+ * Guarantees there is not another not another pattern
+ * equal to the original
+ **********************************************************/
  
 no_equal_pattern( C1,C2,C3,C4, C1,C2,C3,C4, O4 ) :-!,
 	no_equal_number(C4, C4, O4).
 no_equal_pattern( _,_,_,_,  _,_,_,T4,  T4 ).
 
 
-/******************************************************************
- * Fills the cube with random numbers in the domain of the problem
- ******************************************************************/
+/**********************************************************
+ * Fills the cube with random numbers in the domain
+ * of the problem
+ **********************************************************/
 
 fill_cube_face_int(  _,_,_,_,  DistBetweenElems,DistBetweenElems,   A,B,C,D,   FaceOut ) :- !,
 	append([], D, L1),
@@ -358,9 +355,9 @@ fill_cube_face( C1,C2,C3,C4,  DistBetweenElems,  FaceOut ) :-
 	fill_cube_face_int( C1,C2,C3,C4,  1,   DistBetweenElems,   [C1],[C2],[C3],[C4],   FaceOut ).	
 
 
-/******************************************************************
+/**********************************************************
  * Writes the cube face to the file Stream
- ******************************************************************/
+ **********************************************************/
  
 write_cube_line([], _):-!.
 write_cube_line([H|T], Stream) :-
@@ -373,10 +370,10 @@ write_cube_line(_, Stream) :- !,
 	abort.
 	
 	
-/******************************************************************
- * Writes the cube faces to file (one per line) in this order
- * Top, Bottom, Front, Back, Left, Right, 
- ******************************************************************/
+/**********************************************************
+ * Writes the cube faces to file (one per line) in this
+ * order: Top, Bottom, Front, Back, Left, Right, 
+ **********************************************************/
  
 write_cube_file(Filename, Top, Bottom, Front, Back, Left, Right) :-
 	open(Filename, write, Stream), !,
@@ -395,13 +392,13 @@ write_cube_file(Filename, Top, Bottom, Front, Back, Left, Right) :-
 	close(Stream).
 	
 	
-/******************************************************************
- * Predicate that only accepts a cube with a unique solution
- * This is possible because the algorithm that solves the cube
- * starts with a shift of one, if no other solution is found,
- * the solution will have all six rotations with the length of
- * the face.
- ******************************************************************/
+/**********************************************************
+ * Predicate that only accepts a cube with a unique
+ * solution. This is possible because the algorithm that
+ * solves the cube starts with a shift of one, if no other
+ * solution is found, the solution will have all six
+ * rotations with the length of the face.
+ **********************************************************/
  
 turn12_unique_gen( Top, Bottom, Front, Back, Left, Right ) :- !,
 	turn12( Top, Bottom, Front, Back, Left, Right,    R1, R2, R3, R4, R5, R6,
@@ -417,9 +414,9 @@ turn12_unique_gen( Top, Bottom, Front, Back, Left, Right ) :- !,
 	R6 = TotalElem.
 
 
-/******************************************************************
+/**********************************************************
  * Rotates the face list, many times specified.
- ******************************************************************/
+ **********************************************************/
  
 shuffle_cube_face( Face, ShufflePos, FaceOut ) :-
 	shuffle_cube_face( Face, 0, ShufflePos, [], FaceOut ).
@@ -432,19 +429,19 @@ shuffle_cube_face( Tail, _, _, ListIn, FaceOut ) :-
 	append( Tail, ListIn, FaceOut ).
 	
 	
-/******************************************************************
+/**********************************************************
  * Rotates the face with a random number
- ******************************************************************/
+ **********************************************************/
  
 randomly_suffle_face( Face, FaceSize, FaceOut ) :-
 	random(0, FaceSize, Rotation),
 	shuffle_cube_face( Face, Rotation, FaceOut ).
 	
 	
-/******************************************************************
+/**********************************************************
  * Analytics predicates. Just check the sum of each line.
  * Not needed to solve the problem
- ******************************************************************/
+ **********************************************************/
  
 sum_face([], Sum, Sum).
 sum_face([H|T], SumIn, SumOut) :-
@@ -472,9 +469,9 @@ print_cube_stats( Top, Bottom, Front, Back, Left, Right, FaceSize ) :-
 	print_face_stats('Total', TotalSum, FaceSize).
 	
 	
-/******************************************************************
+/**********************************************************
  * Generates a new problem base on the arguments
- ******************************************************************/
+ **********************************************************/
  
 turn12genp:-
 	turn12gen( 'C:/Users/João Henriques/Desktop/Eng. Informática/FEUP/PLOG/turn12/src/cubo_a.txt', 10 ).
@@ -511,7 +508,7 @@ turn12gen(Filename, Distance):-
 
 	domain(ContactPoints, 3, 9),
 	
-	% têm de ser diferentes, se não, ao girar a face 180º,
+	% têm de ser diferentes, se não, ao girar a face 180 graus,
 	% e se os cantos opostos forem os mesmos, originaria uma nova solução
 	% se os quatro forem iguais, originariam 4 novas soluções.
 	TT_C1 #\= TT_C3   #\/   TT_C2 #\= TT_C4,
