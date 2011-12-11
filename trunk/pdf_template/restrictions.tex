@@ -59,4 +59,19 @@ Quando encontrada, é passada para outra face do cubo, e com recurso a outro pre
 A razão para a utilização de vários predicados de etiquetagem deve-se ao facto de ser utilizado um predicado auxiliar (\textit{shifted\_face}) que preenche as variáveis utilizadas para testar as restrições com base na rotação correspondente, e tendo-se verificado que quando utilizado um único predicado para o mesmo efeito, o \textit{shifted\_face} era chamado desnecessariamente, mesmo para as faces em que a rotação se mantinha igual e que não tinham originado a falha.
 Após isolados, o predicado só passou a ser chamado para a face do respectivo labeling, e evitando um varrimento contínuo e dispendioso nas várias listas de dígitos de cada face.
 
+\section{Visualização da Solução}
+\label{rest:5}
+
+A visualização da solução é feita através do predicado \textit{project\_cube}.
+Este predicado aceita faz uma projecção do cubo 3D em 2D, e tem como parâmetros de entrada os valores da solução encontrada pelo algorítmo de procura. Estes parâmetros são passados em grupos de 4, os cantos de cada face pela seguinte ordem: canto superior da face, canto direito da face, canto de baixo e canto esquerdo. Sendo a ordem de passagem das faces a seguinte: Topo,Trás, Direita, Esquerda, Frente, Baixo.
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[scale=0.8]{resol.png}
+\caption{Impressão da solução do problema original do turn12.}
+\label{fig:1}
+\end{center}
+\end{figure}
+
+
 %
