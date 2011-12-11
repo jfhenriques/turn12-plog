@@ -4,6 +4,25 @@
 :- use_module(library(lists)).
 
 
+
+not(P) :- call(P), !, fail. 
+not(_). 
+
+/**********************************************************
+ * Manipulation of file path.
+ * defines the main path folder, needed in windows
+ * or the installation folder of prolog will be used
+ **********************************************************/
+ 
+% uncommet to ignore
+%main_path('').
+main_path('C:/Users/João Henriques/Desktop/Eng. Informática/FEUP/PLOG/turn12/src/').
+
+construct_full_file_path(File, Path) :-
+	main_path(Dir),
+	atom_concat(Dir, File, Path).
+	
+	
 /**********************************************************
  * Gets and Sets the elements of the list, in pre marked
  * positions, as the new contact points
@@ -182,9 +201,14 @@ verifyLineDistance(_, _):-!,
 /**********************************************************
  * turn12 processing
  **********************************************************/
- 
+
 turn12p:-
-	turn12('C:/Users/João Henriques/Desktop/Eng. Informática/FEUP/PLOG/turn12/src/cubo_a.txt').
+	turn12('cubo_a.txt').
+	
+turn12(Filename):-
+	construct_full_file_path( Filename, FilePath ),
+	not(turn12_all_poss(FilePath)), write(' no'), nl, nl,
+	fd_statistics.
  
 /*dump_o_face( Top,Bottom,Front,Back,Left,Right, R1,R2,R3,R4,R5,R6 ) :- !,
 	length(Top, Size),
@@ -202,28 +226,6 @@ turn12p:-
 	shuffle_cube_face( Right , S6, ShuffRight  ),
 	write_cube_file('C:/Users/João Henriques/Desktop/Eng. Informática/FEUP/PLOG/turn12/src/cubo_a_t.txt',
 		ShuffTop, ShuffBottom, ShuffFront, ShuffBack, ShuffLeft, ShuffRight ).*/
-
-turn12(Filename):-
-
-	write('Reading cube file...'),nl,
-	parse_file(Filename, Top, Bottom, Front, Back, Left, Right), !,
-	
-	write('Attempting to solve cube...'),nl,
-	turn12( Top,Bottom,Front,Back,Left,Right,    R1, R2, R3, R4, R5, R6,
-			TT_C1,TT_C2,TT_C3,TT_C4,   BO_C1,BO_C2,BO_C3,BO_C4,    FF_C1,FF_C2,FF_C3,FF_C4,
-			BA_C1,BA_C2,BA_C3,BA_C4,   LL_C1,LL_C2,LL_C3,LL_C4,    RR_C1,RR_C2,RR_C3,RR_C4   ),
-
-	nl,	print_rots( R1,R2,R3,R4,R5,R6 ), nl,
-	
-	project_cube( TT_C1,TT_C2,TT_C3,TT_C4,   BA_C1,BA_C2,BA_C3,BA_C4,   RR_C1,RR_C2,RR_C3,RR_C4,
-                  LL_C1,LL_C2,LL_C3,LL_C4,   FF_C1,FF_C2,FF_C3,FF_C4,   BO_C1,BO_C2,BO_C3,BO_C4 ),
-				  
-	%dump_o_face( Top,Bottom,Front,Back,Left,Right,    R1, R2, R3, R4, R5, R6 ),!,
-	
-	nl,nl,
-
-	write('More possibilities ?'),
-	1 = 2. % falha para ver se existem mais possibilidades
 
 turn12( Top, Bottom, Front, Back, Left, Right,    R1, R2, R3, R4, R5, R6,
 		TT_C1,TT_C2,TT_C3,TT_C4,   BO_C1,BO_C2,BO_C3,BO_C4,    FF_C1,FF_C2,FF_C3,FF_C4,
@@ -284,6 +286,28 @@ turn12( Top, Bottom, Front, Back, Left, Right,    R1, R2, R3, R4, R5, R6,
 	labeling([], [R2]),
 	shifted_face( Bottom, R2, TotElems, Distance, BO_C1, BO_C2, BO_C3, BO_C4 ).
 
+turn12_all_poss(Filename) :-
+	write('Reading cube file...'),nl,
+	parse_file(Filename, Top, Bottom, Front, Back, Left, Right), !,
+	
+	write('Attempting to solve cube...'),nl,
+	turn12( Top,Bottom,Front,Back,Left,Right,    R1, R2, R3, R4, R5, R6,
+			TT_C1,TT_C2,TT_C3,TT_C4,   BO_C1,BO_C2,BO_C3,BO_C4,    FF_C1,FF_C2,FF_C3,FF_C4,
+			BA_C1,BA_C2,BA_C3,BA_C4,   LL_C1,LL_C2,LL_C3,LL_C4,    RR_C1,RR_C2,RR_C3,RR_C4   ),
+
+	nl,	print_rots( R1,R2,R3,R4,R5,R6 ), nl,
+	
+	project_cube( TT_C1,TT_C2,TT_C3,TT_C4,   BA_C1,BA_C2,BA_C3,BA_C4,   RR_C1,RR_C2,RR_C3,RR_C4,
+                  LL_C1,LL_C2,LL_C3,LL_C4,   FF_C1,FF_C2,FF_C3,FF_C4,   BO_C1,BO_C2,BO_C3,BO_C4 ),
+				  
+	%dump_o_face( Top,Bottom,Front,Back,Left,Right,    R1, R2, R3, R4, R5, R6 ),!,
+	
+	nl,nl,
+
+	write('More possibilities ?'),
+	fail. % falha para verificar se existem mais possibilidades	
+	
+	
 	
 	
 /**********************************************************
@@ -472,15 +496,14 @@ print_cube_stats( Top, Bottom, Front, Back, Left, Right, FaceSize ) :-
 /**********************************************************
  * Generates a new problem base on the arguments
  **********************************************************/
- 
-turn12genp:-
-	turn12gen( 'C:/Users/João Henriques/Desktop/Eng. Informática/FEUP/PLOG/turn12/src/cubo_a.txt', 10 ).
-	
-turn12genp(Dist):-
-	turn12gen( 'C:/Users/João Henriques/Desktop/Eng. Informática/FEUP/PLOG/turn12/src/cubo_a.txt', Dist ).
+
+turn12gen(Dist):-
+	turn12gen( 'cubo_a.txt', Dist ).
 
 turn12gen(Filename, Distance):-
 	Distance > 0,
+	
+	construct_full_file_path( Filename, FilePath ),
 	
 	repeat,
 	write('Making an attempt to find if current generated random numbers can make a solution...'), nl,
@@ -550,15 +573,6 @@ turn12gen(Filename, Distance):-
 	
 	FaceSize is Distance * 4,
 	
-	%print_cube_stats( Top, Bottom, Front, Back, Left, Right, FaceSize ),
-
-	/*write(Top),nl,
-	write(Bottom),nl,
-	write(Front),nl,
-	write(Back),nl,
-	write(Left),nl,
-	write(Right),nl,*/
-	
 	turn12_unique_gen( Top, Bottom, Front, Back, Left, Right ), !,
 	write('Cube has a unique solution.'),nl,
 	
@@ -573,8 +587,11 @@ turn12gen(Filename, Distance):-
 	project_cube( TT_C1,TT_C2,TT_C3,TT_C4,   BA_C1,BA_C2,BA_C3,BA_C4,   RR_C1,RR_C2,RR_C3,RR_C4,
                   LL_C1,LL_C2,LL_C3,LL_C4,   FF_C1,FF_C2,FF_C3,FF_C4,   BO_C1,BO_C2,BO_C3,BO_C4 ),
 				  
-	write('Writing cube to file.'), nl,
-	write_cube_file(Filename, ShuffTop, ShuffBottom, ShuffFront, ShuffBack, ShuffLeft, ShuffRight ).
+	nl, write('Writing cube to file.'), nl,
+	write_cube_file(FilePath, ShuffTop, ShuffBottom, ShuffFront, ShuffBack, ShuffLeft, ShuffRight ),
+	nl,nl,
+	fd_statistics.
 
 turn12gen(_,_):-
 	write('Distance between elements must be grater than 0. Aborting.').
+	
