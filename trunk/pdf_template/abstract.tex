@@ -6,112 +6,17 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%% Springer-Verlag %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Abstract}
+\chapter{Resumo}
 \label{abstract} % Always give a unique label
 % use \chaptermark{}
 % to alter or adjust the chapter heading in the running head
 
+Este artigo foi elaborado no contexto do curso de Programação em Lógica, e incide sobre a programação em lógica com restrições. 
+A programação em lógica com restrições permite restringir problemas por domínio de soluções e por condições que devem ser cumpridas. 
 
+Com o objectivo de avaliar a viabilidade da programação com restrições para resolver problemas de lógica de complexidade relevante, foram desenvolvidos algoritmos de resolução e de geração de novas soluções para dimensões variáveis do jogo Turn 12.
+Para o efeito fez-se recurso à biblioteca de restrições para o cojunto dos domínios finitos clp(FD) do SICStus Prolog.
 
-\section{Section Heading}
-\label{sec:1}
-% Always give a unique label
-% and use \ref{<label>} for cross-references
-% and \cite{<label>} for bibliographic references
-% use \sectionmark{}
-% to alter or adjust the section heading in the running head
-Your text goes here. Use the \LaTeX\ automatism for your citations
-\cite{monograph}.
+O método utilizado compreende a rotação dos dígitos de cada face, sendo o domínio o conjunto de rotações possíveis. A combinação das faces é feita iterativamente e não simultâneamente, por forma a optimizar os recursos.
 
-\subsection{Subsection Heading}
-\label{sec:2}
-Your text goes here.
-
-\begin{equation}
-\vec{a}\times\vec{b}=\vec{c}
-\end{equation}
-
-\subsubsection{Subsubsection Heading}
-Your text goes here. Use the \LaTeX\ automatism for cross-references as
-well as for your citations, see Sect.~\ref{sec:1}.
-
-\paragraph{Paragraph Heading} %
-Your text goes here.
-
-\subparagraph{Subparagraph Heading.} Your text goes here.%
-%
-\index{paragraph}
-% Use the \index{} command to code your index words
-%
-% For tables use
-%
-\begin{table}
-\centering
-\caption{Please write your table caption here}
-\label{tab:1}       % Give a unique label
-%
-% For LaTeX tables use
-%
-\begin{tabular}{lll}
-\hline\noalign{\smallskip}
-first & second & third  \\
-\noalign{\smallskip}\hline\noalign{\smallskip}
-number & number & number \\
-number & number & number \\
-\noalign{\smallskip}\hline
-\end{tabular}
-\end{table}
-%
-%
-% For figures use
-%
-%\begin{figure}
-%\centering
-% Use the relevant command for your figure-insertion program
-% to insert the figure file.
-% For example, with the option graphics use
-%\includegraphics[height=4cm]{figure.eps}
-%
-% If not, use
-%\picplace{5cm}{2cm} % Give the correct figure height and width in cm
-%
-%\caption{Please write your figure caption here}
-%\label{fig:1}       % Give a unique label
-%\end{figure}
-%
-% For built-in environments use
-%
-\begin{theorem}
-Theorem text goes here.
-\end{theorem}
-%
-% or
-%
-\begin{lemma}
-Lemma text goes here.
-\end{lemma}
-%
-%
-% Problems or Exercises should be sorted chapterwise
-\section*{Problems}
-\addcontentsline{toc}{section}{Problems}
-%
-% Use the following environment.
-% Don't forget to label each problem;
-% the label is needed for the solutions' environment
-\begin{prob}
-\label{prob1}
-The problem\footnote{Footnote} is described here. The
-problem is described here. The problem is described here.
-\end{prob}
-
-\begin{prob}
-\label{prob2}
-\textbf{Problem Heading}\\
-(a) The first part of the problem is described here.\\
-(b) The second part of the problem is described here.
-\end{prob}
-
-
-
-%
+Obtiveram-se resultados em tempo útil para solucionar o problema original e para um número de digitos não superior a 60, o que permitiu concluir que a metodologia utilizada é adequada para a resolução de problemas do género.
