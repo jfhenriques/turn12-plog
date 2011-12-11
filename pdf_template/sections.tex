@@ -1,15 +1,58 @@
-%%%%%%%%%%%%%%%%%%%%% restrictions.tex %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%% introduction.tex %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% sample chapter
-%
-% Use this file as a template for your own input.
+% Introduction chapter
 %
 %%%%%%%%%%%%%%%%%%%%%%%% Springer-Verlag %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Artigo}
+\label{art}
+
+\section{Introducão}
+\label{introduction} % Always give a unique label
+% use \chaptermark{}
+% to alter or adjust the chapter heading in the running head
+
+Programação em lógica com restrições é uma junção de dois paradigmas: solução de restrições e programação em lógica. Esta combinação permite uma concepção mais expressiva e flexível — e em alguns casos mais eficiente - de problemas lógicos.
+
+\subsection{Motivação}
+\label{sec:1}
+% Always give a unique label
+% and use \ref{<label>} for cross-references
+% and \cite{<label>} for bibliographic references
+% use \sectionmark{}
+% to alter or adjust the section heading in the running head
+A motivação deste trabalho incidiu na compreensão de um paradigma de programação que já nos é familiar, envolvendo uma nova componente de restrições; resolver problemas lógicos com restrições de uma forma geral, tendo a possibilidade de os refinar e otimizar para uma solução particular.
+
+\subsection{Objectivos}
+\label{sec:2}
+Resolver a versão original do jogo Turn12 recorrendo a restrições; gerar cubos com um número de dígitos variável, e avaliar se estes têm solução ou não segundo as restrições definidas.
+
+
+\section{Descrição do problema}
+\label{sec:3}
+O problema centra-se num cubo em que cada face contém dígitos numerados de 3 a 9, aleatoriamente. Na junção das arestas de cada face, a soma dos dois dígitos que se encontram deverá ser igual a 12.
+
+A solução original (Fig. \ref{fig:1}) com 24 dígitos por face é única.
+
+Na geração de problemas, a resolução que apresentamos contempla dígitos ilimitados, e uma vez que não existe qualquer padrão associado à sequência de dígitos no problema original, estes são gerados aleatoriamente.
+
+No entanto, para garantir a unicidade de solução, em valores demasiado elevados (superiores a 60 por face), as limitações de computação começaram-se a sentir e torna-se improvável gerar uma solução única em tempo útil.
+
+%Figura cubo
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.4]{turn12.png}
+\caption{Problema original}
+\label{fig:1}
+\end{center}
+\end{figure}
+
+
 
 \section{Ficheiros de Dados}
 \label{data:1}
 
-Os ficheiros de dados são simples ficheiros de texto (\textit{.txt}), que em cada linha têm os dígitos de cada face.
+Os ficheiros de dados são simples ficheiros de texto (\textit{.txt}), contendo em cada linha os dígitos de cada face.
 As faces encontram-se pela seguinte ordem: Topo, Baixo, Frente, Trás, Esquerda e por fim Direita.
 
 De seguida encontra-se um exemplo deste ficheiro com os valores do problema original:
@@ -63,23 +106,23 @@ Após isolados, o predicado só passou a ser chamado para a face do respectivo l
 \label{rest:5}
 
 A visualização da solução é feita através do predicado \textit{project\_cube}.
-Este predicado faz uma projecção [figura \ref{fig:1}] do cubo 3D em 2D, e tem como parâmetros de entrada os valores da solução encontrada pelo algorítmo de procura. Estes parâmetros são passados em grupos de 4, os cantos de cada face pela seguinte ordem: canto superior da face, canto direito da face, canto de baixo e canto esquerdo. Sendo a ordem de passagem das faces a seguinte: Topo,Trás, Direita, Esquerda, Frente, Baixo.
+Este predicado faz uma projecção (Fig. \ref{fig:2}) do cubo 3D em 2D, e tem como parâmetros de entrada os valores da solução encontrada pelo algorítmo de procura. Estes parâmetros são passados em grupos de 4, os cantos de cada face pela seguinte ordem: canto superior da face, canto direito da face, canto de baixo e canto esquerdo. Sendo a ordem de passagem das faces a seguinte: Topo,Trás, Direita, Esquerda, Frente, Baixo.
 
-\begin{figure}[h!]
+\begin{figure}[H]
 \begin{center}
-\includegraphics[scale=1.0]{resol.png}
+\includegraphics[scale=0.6]{resol.png}
 \caption{Impressão da solução do problema original do turn12.}
-\label{fig:1}
+\label{fig:2}
 \end{center}
 \end{figure}
 
-Adicionalmente existe o predicado \textit{print\_rots}, que imprime [figura \ref{fig:2}] o número de rotações  no sentido contrário ao dos ponteiro do relógio devem ser dadas em cada face sobre o problema para chegar à solução.
+Adicionalmente existe o predicado \textit{print\_rots}, que imprime o número de rotações (Fig. \ref{fig:3}) no sentido contrário ao dos ponteiro do relógio que devem ser dadas em cada face sobre o problema original para encontrar à solução.
 
-\begin{figure}[h!]
+\begin{figure}[H]
 \begin{center}
-\includegraphics[scale=1.0]{rots.png}
+\includegraphics[scale=0.6]{rots.png}
 \caption{Impressão das rotações do problema original do turn12.}
-\label{fig:2}
+\label{fig:3}
 \end{center}
 \end{figure}
 
@@ -99,14 +142,14 @@ De seguida seguem-se dois exemplos da resolução de dois problemas com complexi
 4636795348358376783754934938935675854758379538676936
 6456984789496935693937974554589635464347893474635735
 \end{verbatim}
-\caption{Problema com 52 dígitos por face: }
+\caption{Problema com 52 dígitos por face:}
 \end{f_exemplo}
 
-\begin{figure}[h!]
+\begin{figure}[H]
 \begin{center}
-\includegraphics[scale=0.9]{ex1.png}
-\caption{Resultado}
-\label{fig:3}
+\includegraphics[scale=0.7]{ex1.png}
+\caption{Solução do problema com 52 dígitos por face}
+\label{fig:4}
 \end{center}
 \end{figure}
 
@@ -120,16 +163,17 @@ De seguida seguem-se dois exemplos da resolução de dois problemas com complexi
 469893649494653679565694856947898675395494956976355856784965975784895785
 784837634596534396493678394685453865348743489746597473438967439397839853
 \end{verbatim}
-\caption{Problema com 72 dígitos por face: }
+\caption{Problema com 72 dígitos por face:}
 \end{f_exemplo}
 
-\begin{figure}[h!]
+\begin{figure}[H]
 \begin{center}
-\includegraphics[scale=0.9]{ex2.png}
-\caption{Resultado}
-\label{fig:3}
+\includegraphics[scale=0.7]{ex2.png}
+\caption{Solução do problema com 72 dígitos por face}
+\label{fig:4}
 \end{center}
 \end{figure}
+
 
 
 %
