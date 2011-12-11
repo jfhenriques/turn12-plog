@@ -46,13 +46,14 @@ shifted_face( Face, Shift, TotalElements, Distance, C1, C2, C3, C4 ) :- !,
  ******************************************************************/
 	
 print_rots(R1,R2,R3,R4,R5,R6) :-
+
 	write('[ Rotations ]'), nl,
 	write('Top   : '), write( R1 ), nl,
-	write('Back  : '), write( R2 ), nl,
-	write('Right : '), write( R3 ), nl,
-	write('Left  : '), write( R4 ), nl,
-	write('Front : '), write( R5 ), nl,
-	write('Bottom: '), write( R6 ), nl.
+	write('Bottom: '), write( R2 ), nl,
+	write('Front : '), write( R3 ), nl,
+	write('Back  : '), write( R4 ), nl,
+	write('Left  : '), write( R5 ), nl,
+	write('Right : '), write( R6 ), nl.
 
 	
 /******************************************************************
@@ -193,8 +194,8 @@ turn12(Filename):-
 	
 	write('Attempting to solve cube...'),nl,
 	turn12( Top,Bottom,Front,Back,Left,Right,    R1, R2, R3, R4, R5, R6,
-			TT_C1,TT_C2,TT_C3,TT_C4,    BA_C1,BA_C2,BA_C3,BA_C4,    RR_C1,RR_C2,RR_C3,RR_C4,
-			LL_C1,LL_C2,LL_C3,LL_C4,    FF_C1,FF_C2,FF_C3,FF_C4,    BO_C1,BO_C2,BO_C3,BO_C4 ),
+			TT_C1,TT_C2,TT_C3,TT_C4,   BO_C1,BO_C2,BO_C3,BO_C4,    FF_C1,FF_C2,FF_C3,FF_C4,
+			BA_C1,BA_C2,BA_C3,BA_C4,   LL_C1,LL_C2,LL_C3,LL_C4,    RR_C1,RR_C2,RR_C3,RR_C4   ),
 
 	nl,	print_rots( R1,R2,R3,R4,R5,R6 ), nl,
 	
@@ -205,8 +206,8 @@ turn12(Filename):-
 	1 = 2. % falha para ver se existem mais possibilidades
 
 turn12( Top, Bottom, Front, Back, Left, Right,    R1, R2, R3, R4, R5, R6,
-		TT_C1,TT_C2,TT_C3,TT_C4,   BA_C1,BA_C2,BA_C3,BA_C4,   RR_C1,RR_C2,RR_C3,RR_C4,
-		LL_C1,LL_C2,LL_C3,LL_C4,   FF_C1,FF_C2,FF_C3,FF_C4,   BO_C1,BO_C2,BO_C3,BO_C4   ) :-
+		TT_C1,TT_C2,TT_C3,TT_C4,   BO_C1,BO_C2,BO_C3,BO_C4,    FF_C1,FF_C2,FF_C3,FF_C4,
+		BA_C1,BA_C2,BA_C3,BA_C4,   LL_C1,LL_C2,LL_C3,LL_C4,    RR_C1,RR_C2,RR_C3,RR_C4  ) :-
 	
 	verifyLinesLength(Top, Bottom, Front, Back, Left, Right, TotElems),
 	verifyLineDistance( TotElems, Distance ),
@@ -216,53 +217,52 @@ turn12( Top, Bottom, Front, Back, Left, Right,    R1, R2, R3, R4, R5, R6,
 	domain(Rotations, 1, TotElems),
 
 	
+	% os labelings foram separados de forma a evitar que o predicado shifted_face
+	% seja corrido sem ser necessário. Desta forma sempre que um shifted_face falha,
+	% volta ao labeling anterior, e gera a rotação da face, só voltando aos labelings
+	% anteriores assim que o mesmo esgota todas as possibilidades do domínio.
+	
 	% Face Topo com a face de Trás
 	TT_C1 + BA_C3 #= 12,
+	
+	labeling([], [R1,R4]),
+	shifted_face( Top   , R1, TotElems, Distance, TT_C1, TT_C2, TT_C3, TT_C4 ),
+	shifted_face( Back  , R4, TotElems, Distance, BA_C1, BA_C2, BA_C3, BA_C4 ),
+	
 	
 	% Face Topo, com Direira e Trás 
 	TT_C2 + RR_C4 #= 12,
 	RR_C1 + BA_C2 #= 12,
 	
+	labeling([], [R6]),
+	shifted_face( Right , R6, TotElems, Distance, RR_C1, RR_C2, RR_C3, RR_C4 ),
+	
+
 	% Face Topo, com Esquerda e Trás
 	TT_C4 + LL_C2 #= 12,
 	LL_C1 + BA_C4 #= 12,
+	
+	labeling([], [R5]),
+	shifted_face( Left  , R5, TotElems, Distance, LL_C1, LL_C2, LL_C3, LL_C4 ),
+
 	
 	% Face Topo, com Frente, Direita, Esquerda e Trás
 	TT_C3 + FF_C1 #= 12,
 	RR_C3 + FF_C2 #= 12,
 	LL_C3 + FF_C4 #= 12,
 	
+	labeling([], [R3]),
+	shifted_face( Front , R3, TotElems, Distance, FF_C1, FF_C2, FF_C3, FF_C4 ),
+
+
 	% Face de Baixo com o pontos de contacto das faces adjecentes
 	BO_C3 + FF_C3 #= 12,
 	BO_C2 + LL_C4 #= 12,
 	BO_C4 + RR_C2 #= 12,
 	BO_C1 + BA_C1 #= 12,
 	
-	
-	% os labelings foram separados de forma a evitar que o predicado shifted_face
-	% seja corrido sem ser necessário. Desta forma sempre que um shifted_face falha,
-	% volta ao labeling anterior, e gera a rotação da face, só voltando aos labelings
-	% anteriores assim que o mesmo esgota todas as possibilidades do domínio.
-	
-	labeling([], [R1,R2]),
-	shifted_face( Top   , R1, TotElems, Distance, TT_C1, TT_C2, TT_C3, TT_C4 ),
-	shifted_face( Back  , R2, TotElems, Distance, BA_C1, BA_C2, BA_C3, BA_C4 ),
-	
-
-	labeling([], [R3]),
-	shifted_face( Right , R3, TotElems, Distance, RR_C1, RR_C2, RR_C3, RR_C4 ),
-	
-
-	labeling([], [R4]),
-	shifted_face( Left  , R4, TotElems, Distance, LL_C1, LL_C2, LL_C3, LL_C4 ),
-
-	
-	labeling([], [R5]),
-	shifted_face( Front , R5, TotElems, Distance, FF_C1, FF_C2, FF_C3, FF_C4 ),
-
-
-	labeling([], [R6]),
-	shifted_face( Bottom, R6, TotElems, Distance, BO_C1, BO_C2, BO_C3, BO_C4 ).
+	labeling([], [R2]),
+	shifted_face( Bottom, R2, TotElems, Distance, BO_C1, BO_C2, BO_C3, BO_C4 ).
 
 	
 
