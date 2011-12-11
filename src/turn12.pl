@@ -187,6 +187,23 @@ verifyLineDistance(_, _):-!,
 turn12p:-
 	turn12('C:/Users/João Henriques/Desktop/Eng. Informática/FEUP/PLOG/turn12/src/cubo_a.txt').
  
+/*dump_o_face( Top,Bottom,Front,Back,Left,Right, R1,R2,R3,R4,R5,R6 ) :- !,
+	length(Top, Size),
+	S1 is Size - R1,
+	S2 is Size - R2,
+	S3 is Size - R3,
+	S4 is Size - R4,
+	S5 is Size - R5,
+	S6 is Size - R6,
+	shuffle_cube_face( Top   , S1, ShuffTop    ),
+	shuffle_cube_face( Bottom, S2, ShuffBottom ),
+	shuffle_cube_face( Front , S3, ShuffFront  ),
+	shuffle_cube_face( Back  , S4, ShuffBack   ),
+	shuffle_cube_face( Left  , S5, ShuffLeft   ),
+	shuffle_cube_face( Right , S6, ShuffRight  ),
+	write_cube_file('C:/Users/João Henriques/Desktop/Eng. Informática/FEUP/PLOG/turn12/src/cubo_a_t.txt',
+		ShuffTop, ShuffBottom, ShuffFront, ShuffBack, ShuffLeft, ShuffRight ).*/
+
 turn12(Filename):-
 
 	write('Reading cube file...'),nl,
@@ -201,7 +218,11 @@ turn12(Filename):-
 	
 	project_cube( TT_C1,TT_C2,TT_C3,TT_C4,   BA_C1,BA_C2,BA_C3,BA_C4,   RR_C1,RR_C2,RR_C3,RR_C4,
                   LL_C1,LL_C2,LL_C3,LL_C4,   FF_C1,FF_C2,FF_C3,FF_C4,   BO_C1,BO_C2,BO_C3,BO_C4 ),
+				  
+	%dump_o_face( Top,Bottom,Front,Back,Left,Right,    R1, R2, R3, R4, R5, R6 ),!,
+	
 	nl,nl,
+
 	write('More possibilities ?'),
 	1 = 2. % falha para ver se existem mais possibilidades
 
