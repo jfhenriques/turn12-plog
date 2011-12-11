@@ -4,8 +4,12 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%% Springer-Verlag %%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+
 \chapter{Conteúdo}
 \label{cont}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Introducão}
 \label{introduction} % Always give a unique label
@@ -13,6 +17,10 @@
 % to alter or adjust the chapter heading in the running head
 
 Programação em lógica com restrições é uma junção de dois paradigmas: solução de restrições e programação em lógica. Esta combinação permite uma concepção mais expressiva e flexível — e em alguns casos mais eficiente - de problemas lógicos.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Motivação}
 \label{sec:1}
@@ -23,10 +31,17 @@ Programação em lógica com restrições é uma junção de dois paradigmas: so
 % to alter or adjust the section heading in the running head
 A motivação deste trabalho incidiu na compreensão de um paradigma de programação que já nos é familiar, envolvendo uma nova componente de restrições; resolver problemas lógicos com restrições de uma forma geral, tendo a possibilidade de os refinar e otimizar para uma solução particular.
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \subsection{Objectivos}
 \label{sec:2}
 Resolver a versão original do jogo Turn12 recorrendo a restrições; gerar cubos com um número de dígitos variável, e avaliar se estes têm solução ou não segundo as restrições definidas.
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Descrição do problema}
 \label{sec:3}
@@ -48,6 +63,8 @@ No entanto, para garantir a unicidade de solução, em valores demasiado elevado
 \end{figure}
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Ficheiros de Dados}
 \label{data:1}
@@ -72,11 +89,17 @@ De seguida encontra-se um exemplo deste ficheiro com os valores do problema orig
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Variáveis de Decisão}
 \label{restr:1}
 
 As variáveis de decisão usadas na solução foram as rotações que podiam ser feitas em cada face do cubo.\\
 Estas rotações têm um domínio compreendido entre 1 e o número de dígitos de cada face.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Restrições}
 \label{restr:2}
@@ -85,12 +108,20 @@ Independentemente do número de dígitos em cada face, verificou-se que as restr
 
 Na implementação foi utilizado no \textit{SICStus Prolog} a biblioteca de restrições para o conjunto dos domínios finitos \textit{clp(FD)}, onde foram definidas variáveis que seriam preenchidas com os valores dos pontos de contacto tendo em conta a rotação aplicada sobre cada face, e restringidas de forma a que a soma dos mesmos seja obrigatoriamente 12.
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Função de Avaliação}
 \label{restr:3}
 
 Os predicados de avaliação chamam-se \textit{turn12}. Foram implementados três com o mesmo nome na solução, mas o principal aceita como parâmetros de entrada as 6 faces do cubo, que deverão ser cada um uma lista numérica de dígitos. Se for encontrada uma solução, são definidos como parâmetros de saída as rotações respectivas de cada face. São também definidos e agrupados 4 a 4 os valores da solução. Este predicado tem como objectivo apenas retornar a primeira solução encontrada.\\
 O segundo predicado, com o mesmo nome, tem como parâmetro de entrada a localização do ficheiro com a informação de cada face, e só termina até imprimir todas as soluções do problema.
 Por fim, existe ainda um último predicado que não aceita qualquer parâmetro, e que chama o predicado anteriormente descrito, com um ficheiro numa localização predefinida.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \section{Estratégia de Pesquisa}
@@ -102,6 +133,10 @@ Quando encontrada, é passada para outra face do cubo, e com recurso a outro pre
 A razão para a utilização de vários predicados de etiquetagem deve-se ao facto de ser utilizado um predicado auxiliar (\textit{shifted\_face}), que preenche as variáveis utilizadas para testar as restrições com base na rotação correspondente. 
 Verificou-se que, quando utilizado um único predicado para o mesmo efeito, o \textit{shifted\_face} era chamado desnecessariamente mesmo para as faces em que a rotação se mantinha igual e que não tinham originado a falha.
 Após isolados, o predicado só passou a ser chamado para a face do respectivo labeling, e evitando um varrimento contínuo e dispendioso nas várias listas de dígitos de cada face.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Visualização da Solução}
 \label{rest:5}
@@ -128,6 +163,9 @@ Adicionalmente, foi desenvolvido o predicado \textit{print\_rots}, que imprime o
 \end{center}
 \end{figure}
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Resultados}
 \label{rest:6}
@@ -177,5 +215,17 @@ De seguida seguem-se dois exemplos da resolução de dois problemas com complexi
 \end{figure}
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Conclusões e Perspectivas de Desenvolvimento}
+\label{concl}
+
+Com este projecto concluímos que através da linguagem \textit{Prolog} e com a ajuda da biblioteca de restrições sobre o conjunto dos domínios finitos \textit{clp(FD)} facilmente conseguimos implementar algoritmos eficientes que conseguem resolver de forma rápida e eficiente problemas que encontramos no dia-a-dia. 
+
+O algoritmo desenvolvido, trata de resolver um simples puzzle, mas com uma complexidade que aumenta exponencialmente conforme o número de dígitos de cada face. No problema original, cada face apenas tinha 24 dígitos, mas o algoritmo consegue tratar de qualquer número natural superior ou igual a 1, sendo a única limitação o hardware.
+
+Foi desenvolvido também um algoritmo que gera puzzles, mas como não foi possível encontrar nenhum padrão no problema original, estes são preenchidos aleatoriamente, logo quanto maior for número de dígitos por face, mais complicado é de conseguir encontrar um problema com uma solução única.
 
 %
